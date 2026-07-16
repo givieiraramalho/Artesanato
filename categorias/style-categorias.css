@@ -1,0 +1,288 @@
+/* IMPORTAÇÃO DE FONTES */
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+/* LOCAL DE ARMAZENAMENTO DE CORES */
+:root {
+    --color-texto: #2b2b2b;
+    --color-sombra: #777;
+    --color-borda: #e8e8e8;
+    --color-principal: #f07f0d;
+    --color-fundo: #ffeedc;
+    --color-branco: #fff;
+}
+
+/* RESET PRINCIPAL */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* DEFININDO AS FONTES PRINCIPAIS E A COR DO FUNDO */
+body {
+    font-family: 'Baloo 2', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #fff;
+}
+
+/* INFORMAÇÕES GERAIS DO HEADER */
+.header {
+    width: 100%;
+    border-bottom: 1px solid var(--color-borda);
+    position: sticky;
+    background: #fff;
+}
+
+/* PRIMEIRO TOP-BAR / TOP-BAR DE CIMA */
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 35px;
+    gap: 20px;
+    background-attachment: fixed;
+}
+
+.top-bar a {
+    text-decoration: none;
+}
+
+.img-logo {
+    width: 160px;
+}
+
+/* INFORMAÇÕES DA BARRA DE PESQUISA */
+.search {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.search input {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px 15px;
+    border: 1px solid var(--color-borda);
+    border-radius: 10px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.search input:focus {
+    border-color: var(--color-principal);
+}
+
+.search-btn {
+    width: 42px;
+    height: 42px;
+    border: none;
+    background: var(--color-principal);
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-btn img {
+    width: 18px;
+    filter: invert(1);
+}
+
+/* INFORMAÇÕES DOS BOTÕES DENTRO DO TOP-BAR */
+.actions {
+    display: flex;
+    gap: 15px;
+}
+
+.actions button {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--color-borda);
+    background: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.actions button:hover {
+    background: var(--color-principal);
+}
+
+.actions button:hover img {
+    filter: invert(1);
+}
+
+.actions img {
+    width: 18px;
+}
+
+/* PARTE DE BAIXO COM OS LINKS DE NAVEGAÇÃO */
+.bottom-bar {
+    display: flex;
+    gap: 30px;
+    padding: 10px 30px;
+    border-top: 1px solid var(--color-borda);
+    background: var(--color-principal);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bottom-bar a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 15px;
+    position: relative;
+    transition: 0.2s;
+}
+
+/* PARTE DAS ANIMAÇÕES DOS LINKS */
+.link-animado {
+    position: relative;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+.link-animado::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #ffffff;
+    transform: scaleX(0);
+    transition: transform 0.3s ease-out;
+}
+
+.link-animado:hover::after {
+    transform: scaleX(1);
+}
+
+button a {
+    text-decoration: none;
+}
+
+/* DROPDOWN - LINKS INTERNOS */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* MENU SUSPENSO */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    min-width: 200px;
+    display: none;
+    flex-direction: column;
+    padding: 8px 0;
+    border-radius: 5px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    z-index: 999;
+}
+
+/* LINKS DO DROPDOWN */
+.dropdown-menu a {
+    color: black;
+    text-decoration: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+/* HOVER DOS ITENS */
+.dropdown-menu a:hover {
+    background: var(--color-principal);
+    color: white;
+}
+
+/* MOSTRAR AO PASSAR O MOUSE */
+.dropdown:hover .dropdown-menu {
+    display: flex;
+}
+
+/* PARTE DO FORM DE CADASTRO DE CATEGORIAS */
+.container-categoria {
+    width: 100%;
+    min-height: 100vh;
+    background: #efefef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.form-categoria {
+    width: 100%;
+    max-width: 380px;
+    background: #ffffff;
+    padding: 35px 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 0.4s ease;
+}
+
+.container-categoria h1 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+    margin-bottom: 25px;
+    color: #1f2937;
+}
+
+.container-categoria h2 {
+    font-size: 0.95rem;
+    color: #374151;
+    font-family: 'Segoe UI', sans-serif;
+    margin-bottom: 8px;
+    margin-top: 15px;
+}
+
+.input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    outline: none;
+    font-size: 0.95rem;
+    background: #f9fafb;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.input:focus {
+    border-color: var(--color-principal);
+    background: #ffffff;
+}
+
+.btn-submit {
+    width: 100%;
+    margin-top: 25px;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f07f0d, #fd9c3a);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.5s ease;
+}
+
+.btn-submit:hover {
+    color: #ffffff;
+     background: linear-gradient(
+        135deg,
+        var(--color-principal),
+        #fda546
+    );
+}

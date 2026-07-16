@@ -1,0 +1,349 @@
+/* IMPORTAÇÃO DE FONTES */
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+/* LOCAL DE ARMAZENAMENTO DE CORES */
+:root {
+    --color-texto: #2b2b2b;
+    --color-sombra: #777;
+    --color-borda: #e8e8e8;
+    --color-principal: #f07f0d;
+    --color-fundo: #fffcdc;
+    --color-branco: #fff;
+}
+
+/* RESET PRINCIPAL */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* DEFININDO AS FONTES PRINCIPAIS E A COR DO FUNDO */
+body {
+    font-family: 'Baloo 2', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #fff;
+}
+
+/* INFORMAÇÕES GERAIS DO HEADER */
+.header {
+    width: 100%;
+    border-bottom: 1px solid var(--color-borda);
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 1000;
+    margin-bottom: 15px;
+}
+
+/* PRIMEIRO TOP-BAR / TOP-BAR DE CIMA */
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 35px;
+    gap: 20px;
+    background-attachment: fixed;
+}
+
+.top-bar a {
+    text-decoration: none;
+}
+
+.img-logo {
+    width: 160px;
+}
+
+/* INFORMAÇÕES DA BARRA DE PESQUISA */
+.search {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.search input {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px 15px;
+    border: 1px solid var(--color-borda);
+    border-radius: 10px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.search input:focus {
+    border-color: var(--color-principal);
+}
+
+.search-btn {
+    width: 42px;
+    height: 42px;
+    border: none;
+    background: var(--color-principal);
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-btn img {
+    width: 18px;
+    filter: invert(1);
+}
+
+/* INFORMAÇÕES DOS BOTÕES DENTRO DO TOP-BAR */
+.actions {
+    display: flex;
+    gap: 15px;
+}
+
+.actions button {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--color-borda);
+    background: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.actions button:hover {
+    background: var(--color-principal);
+}
+
+.actions button:hover img {
+    filter: invert(1);
+}
+
+.actions img {
+    width: 18px;
+}
+
+/* PARTE DE BAIXO COM OS LINKS DE NAVEGAÇÃO */
+.bottom-bar {
+    display: flex;
+    gap: 30px;
+    padding: 10px 30px;
+    border-top: 1px solid var(--color-borda);
+    background: var(--color-principal);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bottom-bar a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 15px;
+    position: relative;
+    transition: 0.2s;
+}
+
+/* PARTE DAS ANIMAÇÕES DOS LINKS */
+.link-animado {
+    position: relative;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+.link-animado::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #ffffff;
+    transform: scaleX(0);
+    transition: transform 0.3s ease-out;
+}
+
+.link-animado:hover::after {
+    transform: scaleX(1);
+}
+
+/* DROPDOWN - LINKS INTERNOS */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* MENU SUSPENSO */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-principal);
+    min-width: 200px;
+    display: none;
+    flex-direction: column;
+    padding: 8px 0;
+    border-radius: 5px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+}
+
+/* LINKS DO DROPDOWN */
+.dropdown-menu a {
+    color: black;
+    text-decoration: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+/* HOVER DOS ITENS */
+.dropdown-menu a:hover {
+    background: var(--color-principal);
+    color: white;
+}
+
+/* MOSTRAR AO PASSAR O MOUSE */
+.dropdown:hover .dropdown-menu {
+    display: flex;
+}
+
+/* PARTE DO FORM DE CADASTRO DE FUNCIONARIOS */
+.container-login {
+    width: 100%;
+    min-height: 100vh;
+    background: #efefef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.secao {
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 16px;
+    background: #fafafa;
+}
+
+.form-login {
+    width: 100%;
+    max-width: 650px;
+    margin: auto;
+    padding: 30px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form-login h1 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-family: 'Baloo 2', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #222;
+    font-weight: bolder;
+}
+
+.subtitulo {
+    text-align: center;
+    color: #777;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
+.linha {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.nome {
+    flex: 1;
+}
+.campo label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-login input,
+.form-login textarea {
+    width: 100%;
+    border: 1px solid #dcdcdc;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 15px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.form-login input:focus,
+.form-login textarea:focus {
+    border-color: #f07f0d;
+}
+
+.form-login textarea {
+    min-height: 140px;
+    resize: none;
+}
+
+.titulo-radio{
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.grupo-radio{
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.opcao-radio{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    color: #444;
+}
+
+.opcao-radio input[type="radio"]{
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.btn-submit {
+    border: none;
+    background: #f07f0d;
+    color: white;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-submit:hover {
+    background: #bb620a;
+}
+
+/* ESTE CÓDIGO É PARA IMPEDIR QUE A BARRA DE ROLAGEM DOS NÚMEROS FIQUE APARECENDO */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

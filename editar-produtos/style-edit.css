@@ -1,0 +1,405 @@
+/* IMPORTAÇÃO DE FONTES */
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+/* LOCAL DE ARMAZENAMENTO DE CORES */
+:root {
+    --color-texto: #2b2b2b;
+    --color-sombra: #777;
+    --color-borda: #e8e8e8;
+    --color-principal: #f07f0d;
+    --color-fundo: #fffcdc;
+    --color-branco: #fff;
+}
+
+/* RESET PRINCIPAL */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* DEFININDO AS FONTES PRINCIPAIS E A COR DO FUNDO */
+body {
+    font-family: 'Baloo 2', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #fff;
+}
+
+/* INFORMAÇÕES GERAIS DO HEADER */
+.header {
+    width: 100%;
+    border-bottom: 1px solid var(--color-borda);
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 1000;
+    margin-bottom: 15px;
+}
+
+/* PRIMEIRO TOP-BAR / TOP-BAR DE CIMA */
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 35px;
+    gap: 20px;
+    background-attachment: fixed;
+}
+
+.top-bar a {
+    text-decoration: none;
+}
+
+.img-logo {
+    width: 160px;
+}
+
+/* INFORMAÇÕES DA BARRA DE PESQUISA */
+.search {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.search input {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px 15px;
+    border: 1px solid var(--color-borda);
+    border-radius: 10px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.search input:focus {
+    border-color: var(--color-principal);
+}
+
+.search-btn {
+    width: 42px;
+    height: 42px;
+    border: none;
+    background: var(--color-principal);
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-btn img {
+    width: 18px;
+    filter: invert(1);
+}
+
+/* INFORMAÇÕES DOS BOTÕES DENTRO DO TOP-BAR */
+.actions {
+    display: flex;
+    gap: 15px;
+}
+
+.actions button {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--color-borda);
+    background: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.actions button:hover {
+    background: var(--color-principal);
+}
+
+.actions button:hover img {
+    filter: invert(1);
+}
+
+.actions img {
+    width: 18px;
+}
+
+/* PARTE DE BAIXO COM OS LINKS DE NAVEGAÇÃO */
+.bottom-bar {
+    display: flex;
+    gap: 30px;
+    padding: 10px 30px;
+    border-top: 1px solid var(--color-borda);
+    background: var(--color-principal);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bottom-bar a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 15px;
+    position: relative;
+    transition: 0.2s;
+}
+
+/* PARTE DAS ANIMAÇÕES DOS LINKS */
+.link-animado {
+    position: relative;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+.link-animado::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #ffffff;
+    transform: scaleX(0);
+    transition: transform 0.3s ease-out;
+}
+
+.link-animado:hover::after {
+    transform: scaleX(1);
+}
+
+/* PARTE DOS LINKS DE VISUALIZAÇÃO A PARTIR DO CADASTRAR */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-principal);
+    min-width: 200px;
+    display: none;
+    flex-direction: column;
+    padding: 8px 0;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+}
+
+/* LINKS DO DROPDOWN */
+.dropdown-menu a {
+    color: black;
+    text-decoration: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+/* HOVER DOS ITENS */
+.dropdown-menu a:hover {
+    background: var(--color-principal);
+    color: white;
+}
+
+/* TELA INICIAL DO SISTEMA DE EDIÇÃO DE PRODUTOS */
+.inicio {
+    width: 92%;
+    margin: 25px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, .05),
+        0 2px 10px rgba(0, 0, 0, .03);
+}
+
+.cabecalho-dashboard {
+    text-align: center;
+    margin-bottom: 35px;
+    padding: 30px;
+    border-radius: 20px;
+    background: linear-gradient(135deg,
+            #fff7ee,
+            #ffffff);
+}
+
+.title {
+    font-size: 3rem;
+    color: #222;
+    margin: 0;
+    font-weight: 800;
+}
+
+.title::after {
+    content: '';
+    display: block;
+    width: 120px;
+    height: 6px;
+    margin: 15px auto;
+    border-radius: 999px;
+    background: var(--color-principal);
+}
+
+.subtitulo {
+    color: #666;
+    font-family: 'Inter', sans-serif;
+}
+
+/* PARTE DOS FILTROS */
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 0 25px;
+    margin-bottom: 25px;
+    margin-top: 15px;
+}
+
+.filter {
+    border: none;
+    background: #e9e9e9;
+    padding: 10px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 650;
+}
+
+.filter:hover,
+.filter.active {
+    background: #f59637;
+    color: white;
+    font-weight: bold;
+}
+
+/* MOSTRAR AO PASSAR O MOUSE */
+.dropdown:hover .dropdown-menu {
+    display: flex;
+}
+
+/* CARDS DOS PRODUTOS */
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    padding: 30px;
+    justify-content: flex-start;
+    margin-left: 15px;
+}
+
+/* CARD */
+.product-card {
+    width: 320px;
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .08);
+    transition: .3s;
+    display: flex;
+    flex-direction: column;
+}
+
+/* IMAGEM */
+.product-image-container {
+    width: 100%;
+    height: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fafafa;
+    border-bottom: 1px solid #ececec;
+}
+
+.product-image {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+}
+
+/* CONTEÚDO */
+.product-content {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    flex: 1;
+}
+
+.product-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2b2b2b;
+    margin-bottom: 12px;
+}
+
+/* DESCRIÇÃO */
+.product-description {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 18px;
+    background: #ececec;
+    height: 80px;
+    overflow-y: auto;
+    padding-right: 6px;
+}
+
+/* ESTOQUE */
+.product-estoque {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* PARTE DO PREÇO E DESCONTO */
+.product-values {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.product-price {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00a650;
+}
+
+.product-discount {
+    background: #ece6e6;
+    color: BLACK;
+    font-size: 13px;
+    border: 1px solid #000;
+    font-weight: bold;
+    padding: 2.5px 5px;
+    border-radius: 20px;
+}
+
+/* PARTE DOS BOTÕES DO CARD */
+.card-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.card-buttons .btn {
+    flex: 1;
+    font-weight: 600;
+    border-radius: 10px;
+}
+
+
+/* FOOTER / PARTE FINAL DO SITE */
+.footer {
+    background: #011a36;
+    width: auto;
+    color: white;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer h2 {
+    font-family: 'Baloo 2', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.footer p {
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+}
