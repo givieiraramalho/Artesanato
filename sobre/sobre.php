@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sobre - Artesanatos Eloi</title>
     <link rel="stylesheet" href="style-sobre.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -23,10 +26,27 @@
                         <img src="../img/search.svg" alt="Pesquisar"></button>
                 </div>
 
-                <!-- IMAGENS/BOTÕES DO ENTRAR E DO CARRINHO -->
+                <!-- BOTÃO DE ENTRAR/CADASTRAR -->
                 <div class="actions">
-                    <button><a href="../login/login.php"><img src="../img/person.svg" alt="Login"></a></button>
-                    <button><img src="../img/cart3.svg" alt="Carrinho"></button>
+
+                    <div class="dropdown-button">
+                        <button class="button-dropdown">
+                            <img src="../img/person.svg" alt="Login">
+                        </button>
+
+                        <div class="conteudo-dropdown">
+                            <a href="../cadastro/cadastro.php">Cadastro</a>
+                            <a href="../login/login.php">Login</a>
+                            <a href="#">Página do Usuário</a>
+                        </div>
+                    </div>
+
+                    <!-- BOTÃO DO CARRINHO DE COMPRAS -->
+                    <a href="../carrinho-compras/carrinho-compras.php">
+                        <button>
+                            <img src="../img/cart3.svg" alt="Carrinho">
+                        </button>
+                    </a>
                 </div>
             </div>
 
@@ -61,6 +81,52 @@
         <h2>Como começou?</h2>
         <p>A Artesanatos Eloi começou de um sonho grande de um pai que precisava sustentar a família e queria começar a trabalhar com uma coisa que sempre amava. Brinquedos!</p>
     </div>
+
+     <!-- PARTE FINAL DO SITE / FOOTER -->
+    <footer>
+        <div class="content-footer">
+            <div class="top">
+                <div class="logo-details">
+                    <span class="logo_name">Artesanatos Eloi</span>
+                </div>
+                <div class="media-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="link-boxes">
+                <ul class="boxes">
+                    <li class="link_name">Sobre a Empresa</li>
+                    <li><a href="#">Início</a></li>
+                    <li><a href="#">Contatos</a></li>
+                    <li><a href="#">Endereços</a></li>
+                    <li><a href="#">Nossa História</a></li>
+                </ul>
+                <div class="link-boxes">
+                    <ul class="boxes">
+                        <li class="link_name">Produtos</li>
+                        <li><a href="#">Início</a></li>
+                        <li><a href="#">Todos os Produtos</a></li>
+                        <li><a href="#">Novidades</a></li>
+                        <li><a href="#">Promoções</a></li>
+                    </ul>
+                    <ul class="boxes input-box">
+                        <li class="link_name">Inscreva-se</li>
+                        <li><input type="text" placeholder="Digite seu email"></li>
+                        <li><input type="button" value="Inscreva-se"></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bottom-details">
+                <div class="bottom_text">
+                    <span class="copyright_text">
+                        Copyright &#169; 2026 - Artesanatos Eloi.
+                        Todos os Direitos Reservados
+                    </span>
+                </div>
+            </div>
+    </footer>
 
 </body>
 
