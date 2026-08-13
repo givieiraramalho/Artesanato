@@ -53,9 +53,9 @@
                 <img src="../img/logo-ae.png" alt="">
                 <h1>Cadastrar</h1>
                 <h2>Nome</h2>
-                <input type="text" name="nome" class="input" placeholder="Nome Completo" required>
+                <input type="text" name="nome" class="input" placeholder="Nome Completo" autocomplete="off" required>
                 <h2>Email</h2>
-                <input type="email" name="email" class="input" placeholder="Digite seu Email" required>
+                <input type="email" name="email" class="input" placeholder="Digite seu Email" autocomplete="off" required>
                 <h2>Senha</h2>
                 <input type="password" name="senha" class="input" placeholder="Digite uma Senha" required>
                 <h2>Repita sua Senha</h2>
