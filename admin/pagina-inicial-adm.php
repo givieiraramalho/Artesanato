@@ -1,6 +1,9 @@
 <?php
 
+//PARTE DO CÓDIGO PHP RESPONSÁVEL POR MOSTRAR TODOS OS DADOS ARMAZENADOS NAS TABELAS DE FUNCIONÁRIOS, CATEGORIAS DE PRODUTOS E DAS FORMAS DE PAGAMENTO
 require '../banco/config.php';
+
+session_start();
 
 // Fazendo o Select da tabela funcionário
 $lista = [];
@@ -56,7 +59,7 @@ if ($sql->rowCount() > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Artesanatos Eloi</title>
-    <link rel="stylesheet" href="style-pagina-adm.css">
+    <link rel="stylesheet" href="../admin/css/style-pagina-adm.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
 
@@ -83,6 +86,20 @@ if ($sql->rowCount() > 0) {
 
             <!-- IMAGENS/BOTÕES DAS NOTIFICAÇÕES E DAS CONFIGURAÇÕES -->
             <div class="actions">
+                <div class="dropdown-button">
+                    <button class="button-dropdown">
+                        <img src="../img/person.svg" alt="Login">
+                    </button>
+
+                    <!-- CONTEÚDO DENTRO DO BOTÃO DE LOGIN -->
+                    <div class="conteudo-dropdown">
+                        <a href="#">Página do Admin <?= htmlspecialchars($_SESSION['user_nome'] ?? '') ?></a>
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            <a href="../banco/logout-admin.php">Sair</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                
                 <button><a href=""><img src="../img/bell.svg" alt="Notificações"></a></button>
                 <button><img src="../img/gear.svg" alt="Configurações"></button>
             </div>
@@ -137,96 +154,195 @@ if ($sql->rowCount() > 0) {
                 <!-- TABELA COM ALGUMAS INFORMAÇÕES DE FUNCIONÁRIOS CADASTRADOS -->
                 <div class="card-admin">
                     <h3 class="title-tabela">Funcionários Cadastrados</h3>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nome</th>
-                                <th>Email</th>
-                                <th>Cargo</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($lista as $usuario): ?>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
                                 <tr>
-                                    <td><?= $usuario['idfuncionario'] ?></td>
-                                    <td><?= $usuario['nomefuncionario'] ?></td>
-                                    <td><?= $usuario['emailfuncionario'] ?></td>
-                                    <td><?= $usuario['cargofuncionario'] ?></td>
-                                    <td>
-                                        <button class="btn btn-success">Visualizar</button>
-                                        <a href="../banco/edit-funcionarios.php?id=<?= $usuario['idfuncionario']; ?>" class="btn btn-primary">
-                                            Editar
-                                        </a>
-                                        <button class="btn btn-danger">Excluir</button>
-                                    </td>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Cargo</th>
+                                    <th>Ações</th>
                                 </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($lista as $usuario): ?>
+                                    <tr>
+                                        <td><?= $usuario['idfuncionario'] ?></td>
+                                        <td><?= $usuario['nomefuncionario'] ?></td>
+                                        <td><?= $usuario['emailfuncionario'] ?></td>
+                                        <td><?= $usuario['cargofuncionario'] ?></td>
+                                        <td>
+                                            <button
+                                                type="button"
+                                                class="btn btn-secondary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#JanelaModal<?= $usuario['idfuncionario'] ?>">
+                                                Visualizar
+                                            </button>
+
+                                            <div class="modal fade" id="JanelaModal<?= $usuario['idfuncionario'] ?>" tabindex="-1">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Visualizar Funcionário</h4>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
+
+                                                        <div class="modal-body">
+                                                            <p><b>ID do Funcionário:</b> <?= $usuario['idfuncionario'] ?></p>
+                                                            <p><b>Nome:</b> <?= $usuario['nomefuncionario'] ?></p>
+                                                            <p><b>Email:</b> <?= $usuario['emailfuncionario'] ?></p>
+                                                            <p><b>Telefone:</b> <?= $usuario['telefonefuncionario'] ?></p>
+                                                            <p><b>CPF:</b> <?= $usuario['cpffuncionario'] ?></p>
+                                                            <p><b>Data de Nascimento:</b> <?= $usuario['datanascimento'] ?></p>
+                                                            <p><b>Cargo:</b> <?= $usuario['cargofuncionario'] ?></p>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <a href="../banco/edit-funcionarios.php?id=<?= $usuario['idfuncionario']; ?>" class="btn btn-primary">
+                                                Editar
+                                            </a>
+
+                                            <a href="../banco/excluir.php?tabela=funcionario&campo=idfuncionario&id=<?= $usuario['idfuncionario']; ?>"
+                                                class="btn btn-danger"
+                                                onclick="return confirm('Deseja excluir este funcionário?')">
+                                                Excluir
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
 
                     <br>
 
                     <!-- TABELA COM ALGUMAS INFORMAÇÕES DE CATEGORIAS CADASTRADAS -->
                     <h3 class="title-tabela">Categoria dos Produtos</h3>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Categoria</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($listaCategorias as $categorias): ?>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
                                 <tr>
-                                    <td><?= $categorias['pk_id_categorias'] ?></td>
-                                    <td><?= $categorias['nome_categoria'] ?></td>
-                                    <td>
-                                        <button class="btn btn-success">Visualizar</button>
-                                        <a href="../banco/edit-categorias.php?id=<?= $categorias['pk_id_categorias']; ?>" class="btn btn-primary">
-                                            Editar
-                                        </a>
-                                        <button class="btn btn-danger">Excluir</button>
-                                    </td>
+                                    <th>ID</th>
+                                    <th>Categoria</th>
+                                    <th>Ações</th>
                                 </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($listaCategorias as $categorias): ?>
+                                    <tr>
+                                        <td><?= $categorias['pk_id_categorias'] ?></td>
+                                        <td><?= $categorias['nome_categoria'] ?></td>
+                                        <td>
+                                            <button
+                                                type="button"
+                                                class="btn btn-secondary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#JanelaModal<?= $categorias['pk_id_categorias'] ?>">
+                                                Visualizar
+                                            </button>
+
+                                            <div class="modal fade" id="JanelaModal<?= $categorias['pk_id_categorias'] ?>" tabindex="-1">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Visualizar Categoria</h4>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
+
+                                                        <div class="modal-body">
+                                                            <p><b>ID da Categoria:</b> <?= $categorias['pk_id_categorias'] ?></p>
+                                                            <p><b>Nome da Categoria:</b> <?= $categorias['nome_categoria'] ?></p>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <a href="../banco/edit-categorias.php?id=<?= $categorias['pk_id_categorias']; ?>" class="btn btn-primary">
+                                                Editar
+                                            </a>
+                                            <a href="../banco/excluir.php?tabela=categorias&campo=pk_id_categorias&id=<?= $categorias['pk_id_categorias']; ?>"
+                                                class="btn btn-danger"
+                                                onclick="return confirm('Deseja excluir esta categoria?')">
+                                                Excluir
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
 
                     <br>
 
                     <!-- TABELA COM ALGUMAS INFORMAÇÕES DAS FORMAS DE PAGAMENTO CADASTRADAS -->
                     <h3 class="title-tabela">Formas de Pagamento</h3>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Forma de Pagamento</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($listaPagamento as $pagamento): ?>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
                                 <tr>
-                                    <td><?= $pagamento['pk_id_pagamento'] ?></td>
-                                    <td><?= $pagamento['nome_pagamento'] ?></td>
-                                    <td>
-                                        <button class="btn btn-success">Visualizar</button>
-                                        <button class="btn btn-primary">Editar</button>
-                                        <button class="btn btn-danger">Excluir</button>
-                                    </td>
+                                    <th>ID</th>
+                                    <th>Forma de Pagamento</th>
+                                    <th>Ações</th>
                                 </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($listaPagamento as $pagamento): ?>
+                                    <tr>
+                                        <td><?= $pagamento['pk_id_pagamento'] ?></td>
+                                        <td><?= $pagamento['nome_pagamento'] ?></td>
+                                        <td>
+                                            <button
+                                                type="button"
+                                                class="btn btn-secondary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#JanelaModal<?= $pagamento['pk_id_pagamento'] ?>">
+                                                Visualizar
+                                            </button>
+
+                                            <div class="modal fade" id="JanelaModal<?= $pagamento['pk_id_pagamento'] ?>" tabindex="-1">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Visualizar Pagamento</h4>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
+
+                                                        <div class="modal-body">
+                                                            <p><b>ID do Pagamento:</b> <?= $pagamento['pk_id_pagamento'] ?></p>
+                                                            <p><b>Nome do Pagamento:</b> <?= $pagamento['nome_pagamento'] ?></p>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <a href="../banco/edit-pagamento.php?id=<?= $pagamento['pk_id_pagamento']; ?>" class="btn btn-primary">
+                                                Editar
+                                            </a>
+                                            <a href="../banco/excluir.php?tabela=pagamento&campo=pk_id_pagamento&id=<?= $pagamento['pk_id_pagamento']; ?>"
+                                                class="btn btn-danger"
+                                                onclick="return confirm('Deseja excluir esta forma de pagamento?')">
+                                                Excluir
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
 
                 </div>
 
             </div>
 
-            <div class="panel-pendences">
+            <!--<div class="panel-pendences">
 
                 <div class="header-notificacao">
                     <h3>Notificações</h3>
@@ -255,5 +371,7 @@ if ($sql->rowCount() > 0) {
 
                 </div>
 
-            </div>
+            </div>-->
         </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
