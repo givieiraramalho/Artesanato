@@ -119,6 +119,64 @@ body {
     width: 18px;
 }
 
+/* DROPDOWN DA PARTE DO BOTÃO DO CADASTRO E LOGIN */
+.dropdown-button {
+    position: relative;
+}
+
+.button-dropdown {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--color-borda);
+    background: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: .3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-dropdown:hover {
+    background: var(--color-principal);
+}
+
+.button-dropdown:hover img {
+    filter: invert(1);
+}
+
+/* PARTE DO CONTEÚDO DENTRO DO DROPDOWN */
+.conteudo-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 190px;
+    background: #fff;
+    border: 1px solid var(--color-borda);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .15);
+    z-index: 999;
+}
+
+.conteudo-dropdown a {
+    display: block;
+    padding: 12px 16px;
+    color: var(--color-texto);
+    text-decoration: none;
+    transition: .2s;
+}
+
+.conteudo-dropdown a:hover {
+    background: var(--color-principal);
+    color: #fff;
+}
+
+.dropdown-button:hover .conteudo-dropdown {
+    display: block;
+}
+
 /* PARTE DE BAIXO COM OS LINKS DE NAVEGAÇÃO */
 .bottom-bar {
     display: flex;
@@ -185,7 +243,7 @@ button a {
     flex-direction: column;
     padding: 8px 0;
     border-radius: 5px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     z-index: 999;
 }
 
@@ -210,7 +268,7 @@ button a {
     display: flex;
 }
 
-/* PARTE DO LOGIN */
+/* PARTE DO FORM DE CADASTRO / LOGIN */
 .container-login {
     width: 100%;
     min-height: 100vh;
@@ -223,19 +281,21 @@ button a {
 
 .form-login {
     width: 100%;
-    max-width: 380px;
+    max-width: 400px;
     background: #ffffff;
-    padding: 35px 30px;
+    padding: 30px 25px;
     border-radius: 20px;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
 }
 
+/* PARTE DA IMAGEM DO LOGIN */
 .container-login img {
     width: 90px;
     display: block;
     margin: 0 auto 15px;
 }
 
+/* PARTE DOS TITULOS DO FORMULÁRIO */
 .container-login h1 {
     font-size: 1.7rem;
     font-weight: 700;
@@ -253,6 +313,7 @@ button a {
     margin-top: 15px;
 }
 
+/* PARTE DOS INPUTS DOS FORMULÁRIOS */
 .input {
     width: 100%;
     padding: 10px 12px;
@@ -270,9 +331,10 @@ button a {
     background: #ffffff;
 }
 
+/* PARTE DO BOTÃO DO FORMULÁRIO */
 .btn-submit {
     width: 100%;
-    margin-top: 25px;
+    margin-top: 18px;
     padding: 12px;
     border: none;
     border-radius: 12px;
@@ -286,18 +348,232 @@ button a {
 
 .btn-submit:hover {
     color: #ffffff;
-    background: #fa7d00;
+    background: #e67402;
 }
 
-.container-login a {
-    color: #000;
+/* PARTE DO LINK DE CADASTRO */
+.link-cadastro {
+    color: #1b1b1b9c;
     text-decoration: none;
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: 0.5 ease;
+    transition: color 0.4 ease;
 }
 
-.container-login a:hover {
-    color: #f17900;
+.link-cadastro:hover {
+    color: #f07f0d;
+}
+
+/* PARTE DO LINK DE ESQUECI A SENHA */
+.forget-password {
+    color: #1b1b1b9c;
+    text-decoration: none;
+    transition: color 0.4 ease;
+    display: inline-block;
+    margin-top: 15px;
+}
+
+.forget-password:hover {
+    color: #f07f0d;
+}
+
+/* RESPONSIVIDADE */
+/* NOTEBOOKS PEQUENOS */
+@media (max-width:1200px) {
+
+    .form-login {
+        max-width: 420px;
+    }
+
+}
+
+
+/* TABLETS */
+@media (max-width:992px) {
+
+    /* Header */
+
+    .top-bar {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .img-logo {
+        width: 140px;
+    }
+
+    .search {
+        width: 100%;
+    }
+
+    .search input {
+        max-width: none;
+    }
+
+    .actions {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .bottom-bar {
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .bottom-bar a {
+        font-size: 14px;
+    }
+
+    /* Login */
+
+    .container-login {
+        padding: 25px;
+    }
+
+    .form-login {
+        max-width: 430px;
+        padding: 30px;
+    }
+
+}
+
+
+/* CELULARES */
+@media (max-width:768px) {
+
+    /* Header */
+
+    .top-bar {
+        flex-direction: column;
+        gap: 18px;
+        padding: 15px;
+    }
+
+    .img-logo {
+        width: 120px;
+    }
+
+    .search {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .search input {
+        width: 100%;
+        max-width: none;
+    }
+
+    .search-btn {
+        width: 100%;
+        height: 45px;
+    }
+
+    .actions {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .bottom-bar {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+    }
+
+    .bottom-bar a {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Login */
+
+    .container-login {
+        padding: 15px;
+    }
+
+    .form-login {
+        width: 100%;
+        max-width: 100%;
+        padding: 25px 20px;
+        border-radius: 18px;
+    }
+
+    .container-login img {
+        width: 80px;
+    }
+
+    .container-login h1 {
+        font-size: 1.5rem;
+    }
+
+    .container-login h2 {
+        font-size: 15px;
+    }
+
+    .input {
+        font-size: 15px;
+        padding: 12px;
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 14px;
+        font-size: 16px;
+    }
+
+}
+
+/* CELULARES PEQUENOS */
+@media (max-width:480px) {
+
+    .top-bar {
+        padding: 12px;
+    }
+
+    .img-logo {
+        width: 100px;
+    }
+
+    .actions {
+        gap: 10px;
+    }
+
+    .actions button {
+        width: 40px;
+        height: 40px;
+    }
+
+    .container-login {
+        padding: 10px;
+    }
+
+    .form-login {
+        padding: 20px 15px;
+        border-radius: 15px;
+    }
+
+    .container-login img {
+        width: 70px;
+    }
+
+    .container-login h1 {
+        font-size: 1.35rem;
+    }
+
+    .container-login h2 {
+        font-size: 14px;
+    }
+
+    .input {
+        font-size: 14px;
+    }
+
+    .btn-submit {
+        font-size: 15px;
+    }
+
 }
