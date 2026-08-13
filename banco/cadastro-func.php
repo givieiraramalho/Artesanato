@@ -36,7 +36,7 @@ if ($sql->execute()) {
     echo "
     <script>
         alert('Cadastro realizado com sucesso!');
-        window.location.href = 'http://localhost/artesanatos-eloi/admin/login-adm.php';
+        window.location.href = '../admin/login-adm.php';
     </script>
     ";
 

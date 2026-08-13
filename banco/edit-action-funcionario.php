@@ -47,6 +47,8 @@ if ($id && $nome && $email && $cpf && $telefone && $dtnascimento && $cargo) {
             telefonecontato = :telContato
     ";
 
+    $senhaHash = null;
+
     // Atualiza a senha somente se ela foi informada
     if (!empty($senha)) {
         $sql .= ", senha = :senha";
@@ -77,7 +79,7 @@ if ($id && $nome && $email && $cpf && $telefone && $dtnascimento && $cargo) {
     echo "
     <script>
         alert('O funcionário foi atualizado com sucesso!');
-        window.location.href = 'http://localhost/artesanatos-eloi/admin/pagina-inicial-adm.php';
+        window.location.href = '../admin/pagina-inicial-adm.php';
     </script>
     ";
     exit;

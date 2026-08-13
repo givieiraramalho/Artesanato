@@ -14,7 +14,7 @@ if($id && $nome) {
     echo "
     <script>
         alert('A categoria foi atualizada com sucesso!');
-        window.location.href = 'http://localhost/artesanatos-eloi/admin/pagina-inicial-adm.php';
+        window.location.href = '../admin/pagina-inicial-adm.php';
     </script>
     ";
     exit;

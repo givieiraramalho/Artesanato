@@ -23,6 +23,23 @@ if ($senha !== $senhaRepetida) {
 //Criptografia da senha
 $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
+//Verificando se este email já foi cadastrado anteriormente
+$verifica = $pdo->prepare("SELECT id FROM cadastro WHERE email = :email");
+$verifica->bindValue(':email', $email);
+$verifica->execute();
+
+if ($verifica->rowCount() > 0) {
+
+    echo "
+    <script>
+        alert('Este e-mail já está cadastrado!');
+        window.history.back();
+    </script>
+    ";
+
+    exit;
+}
+
 //Inserindo as informações no banco de dados
 $sql = $pdo->prepare("INSERT INTO cadastro (nome, email, senha) VALUES (:nome, :email, :senha)");
 $sql-> bindValue(':nome', $nome);
@@ -32,6 +49,9 @@ $sql -> bindValue(':senha', $senhaHash);
 //Executando a função
 $sql->execute();
 
+//Mandando uma mensagem de que o cadastro foi realizado com sucesso
+$_SESSION['sucesso_cadastro'] = "Cadastro realizado com sucesso!";
+
 //retornando para uma outra tela
-header("Location: http://localhost/artesanatos-eloi/login/login.php");
+header("Location: ../login/login.php"); 
 exit;

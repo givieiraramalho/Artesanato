@@ -8,21 +8,23 @@ $email = filter_input(INPUT_POST, 'email');
 $senha = filter_input(INPUT_POST, 'senha');
 
 // busca usuário pelo email
-$sql = $pdo->prepare("SELECT email, senha FROM admin WHERE email = :email");
+$sql = $pdo->prepare("SELECT id, email, nome, senha FROM admin WHERE email = :email");
 $sql->bindValue(':email', $email);
 $sql->execute();
 
-$user = $sql->fetch();
+$user = $sql->fetch(PDO::FETCH_ASSOC);
+
 
 //Nesta parte, ele irá validar o login e irá verificar se está correto
 if ($user && password_verify($senha, $user['senha'])) {
 
     $_SESSION['user_id'] = $user['id'];
+    $_SESSION['user_nome'] = $user['nome'];
 
     echo "
     <script>
         alert('Login realizado com sucesso!');
-        window.location.href = 'http://localhost/artesanatos-eloi/admin/pagina-inicial-adm.php';
+        window.location.href = '../admin/pagina-inicial-adm.php';
     </script>
     ";
 

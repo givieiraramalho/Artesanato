@@ -16,7 +16,7 @@ if ($id) {
         echo "
     <script>
         alert('Não existe uma categoria com o id indicado');
-        window.location.href = 'http://localhost/artesanatos-eloi/admin/pagina-inicial-adm.php';
+        window.location.href = '../admin/pagina-inicial-adm.php';
     </script>
     ";
 
@@ -79,7 +79,7 @@ if ($id) {
 
     <div class="container-categoria">
         <form action="../banco/edit-action-categoria.php" method="POST" class="form-categoria">
-            <h1>Cadastrar Categoria</h1>
+            <h1>Editar Categoria</h1>
             <input type="hidden" name="id" value="<?= $categoria['pk_id_categorias'] ?>">
             <h2>Nome da Categoria</h2>
             <input type="text" name="namecategoria" id="namecategoria" class="input" value="<?= $categoria['nome_categoria'] ?>" required>

@@ -1,40 +1,50 @@
 <?php
 
-require 'config.php';
 session_start();
 
-// pega dados do formulário
+require 'config.php';
+
 $email = filter_input(INPUT_POST, 'email');
 $senha = filter_input(INPUT_POST, 'senha');
 
-// busca usuário pelo email
-$sql = $pdo->prepare("SELECT id, senha FROM cadastro WHERE email = :email");
+$sql = $pdo->prepare("
+    SELECT id, nome, senha
+    FROM cadastro
+    WHERE email = :email
+    LIMIT 1
+");
+
 $sql->bindValue(':email', $email);
 $sql->execute();
 
-$user = $sql->fetch();
+$user = $sql->fetch(PDO::FETCH_ASSOC);
 
-//Nesta parte, ele irá validar o login e irá verificar se está correto
-if ($user && password_verify($senha, $user['senha'])) {
+if ($user) {
 
-    // cria uma sessão do id
-    $_SESSION['user_id'] = $user['id'];
+    if (password_verify($senha, $user['senha'])) {
 
-    // Caso o email e a senha estejam corretos, ele será redirecionado para a página inicial
-    header("Location: http://localhost/artesanatos-eloi/pagina-inicial/inicio.php");
-    exit;
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_nome'] = $user['nome'];
+
+        $_SESSION['sucesso_login'] = "Login realizado com sucesso!";
+
+        header("Location: ../pagina-inicial/inicio.php");
+        exit();
+
+    } else {
+
+        $_SESSION['erro_login'] = "Usuário e/ou senha incorretos!";
+
+        header("Location: ../login/login.php"); 
+        exit();
+
+    }
 
 } else {
 
-    // Caso alguma informação estiver errada, irá aparecer este alert na tela
-    echo "
-    <script>
-        alert('Atenção! O email e/ou a senha estão incorretos');
-        window.history.back();
-    </script>
-    ";
+    $_SESSION['erro_login'] = "Usuário não encontrado!";
 
-    exit;
+    header("Location: ../login/login.php"); 
+    exit();
+
 }
-
-?>
