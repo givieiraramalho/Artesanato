@@ -2,6 +2,8 @@
 
 require '../banco/config.php';
 
+session_start();
+
 //Fazendo o Select da tabela Produtos
 $listaProdutos = [];
 
@@ -79,8 +81,22 @@ $listaProdutos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </button>
             </form>
 
-            <!-- IMAGENS/BOTÕES DAS NOTIFICAÇÕES E DAS CONFIGURAÇÕES -->
+             <!-- IMAGENS/BOTÕES DAS NOTIFICAÇÕES E DAS CONFIGURAÇÕES -->
             <div class="actions">
+                <div class="dropdown-button">
+                    <button class="button-dropdown">
+                        <img src="../img/person.svg" alt="Login">
+                    </button>
+
+                    <!-- CONTEÚDO DENTRO DO BOTÃO DE LOGIN -->
+                    <div class="conteudo-dropdown">
+                        <a href="#">Página do Admin <?= htmlspecialchars($_SESSION['user_nome'] ?? '') ?></a>
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            <a href="../banco/logout-admin.php">Sair</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                
                 <button><a href=""><img src="../img/bell.svg" alt="Notificações"></a></button>
                 <button><img src="../img/gear.svg" alt="Configurações"></button>
             </div>
@@ -186,9 +202,39 @@ $listaProdutos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                         <div class="card-buttons">
 
-                            <button type="button" class="btn btn-primary">
-                                Editar
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#JanelaModal<?= $produtos['pk_id_produtos'] ?>">
+                                Visualizar
                             </button>
+
+                            <div class="modal fade" id="JanelaModal<?= $produtos['pk_id_produtos'] ?>" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Visualizar Produto</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <p><b>ID:</b> <?= $produtos['pk_id_produtos'] ?></p>
+                                            <p><b>Nome:</b> <?= $produtos['nome_produto'] ?></p>
+                                            <p><b>Preço:</b> R$ <?= $produtos['preco_produto'] ?></p>
+                                            <p><b>Descrição:</b> <?= $produtos['descricao'] ?></p>
+                                            <p><b>Estoque:</b> <?= $produtos['estoque'] ?></p>
+                                            <p><b>Desconto:</b> <?= $produtos['desconto'] ?></p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="../banco/edit-produtos.php?id=<?= $produtos['pk_id_produtos']; ?>" class="btn btn-primary">
+                                Editar
+                            </a>
 
                             <button type="button" class="btn btn-danger">
                                 Excluir
