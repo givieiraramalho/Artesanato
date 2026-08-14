@@ -1,61 +1,122 @@
 <?php
-//Iniciando um sessão que irá armazenar os produtos que o usuário escolher
 session_start();
 
-//Resgatando as configurações iniciais do banco de dados
 require '../banco/config.php';
 
-//Inicialização do Carrinho
-// Caso ainda não exista um carrinho na memória, irá criar um carrinho vazio
-if (!isset($_SESSION['carrinho'])) {
-    $_SESSION['carrinho'] = [];
-}
-
-//Ações do Carrinho
-//Ação de Adicionar um Produto no Carrinho
 if (isset($_GET['adicionar'])) {
 
-    $idProduto = $_GET['adicionar'];
+    $id_produto = (int) $_GET['adicionar'];
 
-    if (!isset($_SESSION['carrinho'][$idProduto])) {
-        $_SESSION['carrinho'][$idProduto] = 1;
-    } else {
-        $_SESSION['carrinho'][$idProduto]++;
+    // Quantidade escolhida na página do produto
+    $quantidade_adicionar = isset($_GET['quantidade'])
+        ? (int) $_GET['quantidade']
+        : 1;
+
+
+    // Impede quantidade inválida
+    if ($quantidade_adicionar < 1) {
+
+        $quantidade_adicionar = 1;
+
     }
 
+
+    // Busca o produto
+    $sql = $pdo->prepare("
+        SELECT *
+        FROM produtos
+        WHERE pk_id_produtos = :id
+    ");
+
+    $sql->bindValue(":id", $id_produto);
+
+    $sql->execute();
+
+    $produto = $sql->fetch(PDO::FETCH_ASSOC);
+
+
+    if ($produto) {
+
+        // Quantidade que já está no carrinho
+        $quantidade_atual =
+            $_SESSION['carrinho'][$id_produto] ?? 0;
+
+
+        // Estoque disponível
+        $estoque = (int) $produto['estoque'];
+
+
+        // Soma a quantidade escolhida
+        $nova_quantidade =
+            $quantidade_atual + $quantidade_adicionar;
+
+
+        // Verifica o estoque
+        if ($nova_quantidade <= $estoque) {
+
+            $_SESSION['carrinho'][$id_produto] =
+                $nova_quantidade;
+
+        } else {
+
+            $_SESSION['aviso_estoque'] =
+                "A quantidade solicitada ultrapassa o estoque disponível.";
+        }
+    }
+
+
     header("Location: carrinho-compras.php");
+
     exit;
+}
 
-    //Ação de diminuir um produto que já foi adicionado no carrinho
-} elseif (isset($_GET['diminuir'])) {
 
-    $idProduto = $_GET['diminuir'];
+/* Diminuir quantidade */
+if (isset($_GET['diminuir'])) {
 
-    if (isset($_SESSION['carrinho'][$idProduto])) {
+    $id_produto = $_GET['diminuir'];
 
-        $_SESSION['carrinho'][$idProduto]--;
+    if (isset($_SESSION['carrinho'][$id_produto])) {
 
-        if ($_SESSION['carrinho'][$idProduto] <= 0) {
-            unset($_SESSION['carrinho'][$idProduto]);
+        $_SESSION['carrinho'][$id_produto]--;
+
+        // Se chegar a zero, remove do carrinho
+        if ($_SESSION['carrinho'][$id_produto] <= 0) {
+
+            unset($_SESSION['carrinho'][$id_produto]);
         }
     }
 
     header("Location: carrinho-compras.php");
     exit;
+}
 
-    //Ação de remover um produto do carrinho ao apertar o botão de remover
-} elseif (isset($_GET['remover'])) {
+/* Remover produto */
+if (isset($_GET['remover'])) {
 
-    $idProduto = $_GET['remover'];
+    $id_produto = $_GET['remover'];
 
-    unset($_SESSION['carrinho'][$idProduto]);
+    if (isset($_SESSION['carrinho'][$id_produto])) {
+
+        unset($_SESSION['carrinho'][$id_produto]);
+    }
 
     header("Location: carrinho-compras.php");
     exit;
 }
 
-?>
 
+/* Mensagem de alerta do estoque */
+if (isset($_SESSION['aviso_estoque'])) {
+
+    echo "<script>
+        alert('" . addslashes($_SESSION['aviso_estoque']) . "');
+    </script>";
+
+    unset($_SESSION['aviso_estoque']);
+}
+
+?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -133,83 +194,173 @@ if (isset($_GET['adicionar'])) {
     <!-- CARRINHO DE COMPRAS -->
     <div class="content-carrinho">
         <div class="card-carrinho">
+
             <h1 class="title-carrinho">Carrinho de Compras</h1>
-            <a href="../produtos/produtos.php" class="link-redirect">← Voltar para a Vitrine</a>
+
+            <a href="../produtos/produtos.php" class="link-redirect">
+                ← Voltar para a Vitrine
+            </a>
 
             <?php if (empty($_SESSION['carrinho'])): ?>
-                <p style="margin-top: 20px;">Seu carrinho está totalmente vazio.</p>
-            <?php else: ?>
-                <div class="card-content">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Produto</th>
-                                <th>Quantidade</th>
-                                <th>Preço Unitário</th>
-                                <th>Subtotal</th>
-                                <th>Ação</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $total_da_compra = 0;
 
-                            // Passa item por item que está guardado na sessão
-                            foreach ($_SESSION['carrinho'] as $id_produto => $quantidade):
+                <div class="carrinho-vazio">
+                    <p>Seu carrinho está totalmente vazio.</p>
 
-                                $sql = $pdo->prepare("
-                    SELECT *
-                    FROM produtos
-                    WHERE pk_id_produtos = :id");
-
-                                $sql->bindValue(":id", $id_produto);
-                                $sql->execute();
-
-                                $produto = $sql->fetch(PDO::FETCH_ASSOC);
-
-                                if (!$produto) {
-                                    continue;
-                                }
-
-                                $subtotal = $produto['preco_produto'] * $quantidade;
-                                $total_da_compra += $subtotal;
-                            ?>
-                                <tr>
-                                    <td><?php echo $produto['nome_produto']; ?></td>
-                                    <td>
-                                        <!-- Botão de Menos (-) envia o comando para a própria página -->
-                                        <a class="btn" href="carrinho-compras.php?diminuir=<?php echo $produto['pk_id_produtos']; ?>">-</a>
-
-                                        <strong style="margin: 0 10px;"><?php echo $quantidade; ?></strong>
-
-                                        <!-- Botão de Mais (+) usa a mesma lógica do "Comprar Agora" -->
-                                        <a class="btn" href="carrinho-compras.php?adicionar=<?php echo $produto['pk_id_produtos']; ?>">+</a>
-                                    </td>
-                                    <td>R$ <?php echo number_format($produto['preco_produto'], 2, ',', '.'); ?></td>
-                                    <td>R$ <?php echo number_format($subtotal, 2, ',', '.'); ?></td>
-                                    <td>
-                                        <!-- Botão de Remover -->
-                                        <a class="btn btn-remover" href="carrinho-compras.php?remover=<?php echo $produto['pk_id_produtos']; ?>">Remover</a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-
-                            <tr>
-                                <td colspan="3" style="text-align: right; font-weight: bold;">TOTAL DA COMPRA:</td>
-                                <td colspan="1" style="font-size: 1.2em; font-weight: bold; color: green;">
-                                    R$ <?php echo number_format($total_da_compra, 2, ',', '.'); ?>
-                                </td>
-                                <td colspan="1"><a class="btn btn-success" href="">Continuar Compra</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <a href="../produtos/produtos.php" class="btn-continuar">
+                        Ver Produtos
+                    </a>
                 </div>
+
+            <?php else: ?>
+
+                <div class="card-content">
+
+                    <?php
+                    $total_da_compra = 0;
+
+                    foreach ($_SESSION['carrinho'] as $id_produto => $quantidade):
+
+                        $sql = $pdo->prepare("
+                        SELECT *
+                        FROM produtos
+                        WHERE pk_id_produtos = :id
+                    ");
+
+                        $sql->bindValue(":id", $id_produto);
+                        $sql->execute();
+
+                        $produto = $sql->fetch(PDO::FETCH_ASSOC);
+
+                        if (!$produto) {
+                            continue;
+                        }
+
+                        $subtotal = $produto['preco_produto'] * $quantidade;
+                        $total_da_compra += $subtotal;
+                    ?>
+
+                        <!-- PRODUTO DO CARRINHO -->
+                        <div class="item-carrinho">
+
+                            <!-- IMAGEM -->
+                            <div class="imagem-produto-carrinho">
+                                <img
+                                    src="mostrar-imagem.php?id=<?= $produto['pk_id_produtos']; ?>"
+                                    alt="<?php echo $produto['nome_produto']; ?>">
+                            </div>
+
+                            <!-- INFORMAÇÕES -->
+                            <div class="info-produto-carrinho">
+
+                                <h2>
+                                    <?php echo $produto['nome_produto']; ?>
+                                </h2>
+
+                                <p class="preco-produto">
+                                    R$
+                                    <?php
+                                    echo number_format(
+                                        $produto['preco_produto'],
+                                        2,
+                                        ',',
+                                        '.'
+                                    );
+                                    ?>
+                                </p>
+
+                                <!-- QUANTIDADE -->
+                                <div class="quantidade-carrinho">
+
+                                    <a
+                                        class="btn-quantidade diminuir"
+                                        href="carrinho-compras.php?diminuir=<?php echo $produto['pk_id_produtos']; ?>">
+                                        -
+                                    </a>
+
+                                    <strong>
+                                        <?php echo $quantidade; ?>
+                                    </strong>
+
+                                    <a
+                                        class="btn-quantidade aumentar"
+                                        href="carrinho-compras.php?adicionar=<?php echo $produto['pk_id_produtos']; ?>">
+                                        +
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                            <!-- SUBTOTAL -->
+                            <div class="subtotal-carrinho">
+
+                                <span>Subtotal</span>
+
+                                <strong>
+                                    R$
+                                    <?php
+                                    echo number_format(
+                                        $subtotal,
+                                        2,
+                                        ',',
+                                        '.'
+                                    );
+                                    ?>
+                                </strong>
+
+                            </div>
+
+                            <!-- REMOVER -->
+                            <div class="acao-carrinho">
+
+                                <a
+                                    class="btn-remover"
+                                    href="carrinho-compras.php?remover=<?php echo $produto['pk_id_produtos']; ?>">
+                                    Remover
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    <?php endforeach; ?>
+
+                </div>
+
+                <!-- PARTE FINAL DO CARRINHO -->
+                <div class="resumo-carrinho">
+
+                    <div class="total-carrinho">
+
+                        <span>Total da compra</span>
+
+                        <strong>
+                            R$
+                            <?php
+                            echo number_format(
+                                $total_da_compra,
+                                2,
+                                ',',
+                                '.'
+                            );
+                            ?>
+                        </strong>
+
+                    </div>
+
+                    <a class="btn-continuar" href="">
+                        Continuar Compra
+                    </a>
+
+                </div>
+
+            <?php endif; ?>
+
         </div>
     </div>
-<?php endif; ?>
 
-<!-- PARTE FINAL DO SITE / FOOTER -->
-<footer>
+    <!-- PARTE FINAL DO SITE / FOOTER -->
+    <footer>
         <div class="content-footer">
             <div class="top">
                 <div class="logo-details">
@@ -254,4 +405,4 @@ if (isset($_GET['adicionar'])) {
             </div>
     </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
