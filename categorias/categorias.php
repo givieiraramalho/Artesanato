@@ -1,3 +1,8 @@
+<?php
+
+session_start();
+
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -25,6 +30,20 @@
 
                 <!-- IMAGENS/BOTÕES DAS NOTIFICAÇÕES E DAS CONFIGURAÇÕES -->
                 <div class="actions">
+                    <div class="dropdown-button">
+                        <button class="button-dropdown">
+                            <img src="../img/person.svg" alt="Login">
+                        </button>
+
+                        <!-- CONTEÚDO DENTRO DO BOTÃO DE LOGIN -->
+                        <div class="conteudo-dropdown">
+                            <a href="#">Página do Admin <?= htmlspecialchars($_SESSION['user_nome'] ?? '') ?></a>
+                            <?php if (isset($_SESSION['user_id'])): ?>
+                                <a href="../banco/logout-admin.php">Sair</a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
                     <button><a href=""><img src="../img/bell.svg" alt="Notificações"></a></button>
                     <button><img src="../img/gear.svg" alt="Configurações"></button>
                 </div>
@@ -53,7 +72,7 @@
         <form action="../banco/cadatro-categoria.php" method="POST" class="form-categoria">
             <h1>Cadastrar Categoria</h1>
             <h2>Nome da Categoria</h2>
-            <input type="text" name="namecategoria" id="namecategoria" class="input" placeholder="Ex: Caminhões" required>
+            <input type="text" name="namecategoria" id="namecategoria" class="input" placeholder="Ex: Caminhões" autocomplete="none" required>
             <br>
             <button type="submit" class="btn-submit">Cadastrar</button>
 
