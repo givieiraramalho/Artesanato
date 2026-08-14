@@ -107,71 +107,222 @@ if (!$produto) {
 
     <!-- CARD DO PRODUTO -->
     <div class="content-produto">
+
         <div class="card-produto">
 
-            <!-- LINK DE REDIRECIONAMENTO PARA A PÁGINA DE PRODUTOS -->
-            <a href="../produtos/produtos.php" class="link-redirect">
-                <- Voltar para Produtos
-                    </a>
+            <!-- LINK DE VOLTAR -->
+            <a
+                href="../produtos/produtos.php"
+                class="link-redirect">
+                ← Voltar para Produtos
+            </a>
+
+            <!-- ÁREA PRINCIPAL DO PRODUTO -->
+            <div class="produto-detalhes">
+
+                <!-- LADO ESQUERDO -->
+
+                <div class="produto-esquerda">
 
                     <!-- NOME DO PRODUTO -->
-                    <h2 class="title-produto">
+                    <h1 class="title-produto">
                         <?= htmlspecialchars($produto['nome_produto']) ?>
-                    </h2>
+                    </h1>
 
-                    <!-- IMAGEM DO PRODUTO -->
-                    <img class="img-produto" src="mostrar-imagem.php?id=<?= $produto['pk_id_produtos'] ?>">
+                    <!-- IMAGEM -->
+                    <div class="imagem-container">
+                        <img
+                            class="img-produto"
+                            src="mostrar-imagem.php?id=<?= $produto['pk_id_produtos'] ?>"
+                            alt="<?= htmlspecialchars($produto['nome_produto']) ?>">
 
-                    <!-- DESCRIÇÃO DO PRODUTO -->
-                    <h2 class="descricao-produto">
-                        Descrição do Produto
-                    </h2>
+                    </div>
+                </div>
 
-                    <p class="text-descricao-produto">
-                        <?= htmlspecialchars($produto['descricao']) ?>
-                    </p>
+                <!-- LADO DIREITO -->
+                <div class="produto-direita">
 
-                    <!-- PREÇO DO PRODUTO -->
-                    <h2 class="preco-produto">
-                        R$
-                        <?= number_format($produto['preco_produto'], 2, ',', '.') ?>
-                    </h2>
+                    <!-- DESCRIÇÃO -->
+                    <div class="descricao-container">
 
-                    <!-- ESTOQUE DO PRODUTO -->
-                    <p class="estoque-produto">
-                        Estoque:
-                        <?= htmlspecialchars($produto['estoque']) ?>
-                    </p>
+                        <h2 class="descricao-produto">
+                            Descrição do Produto
+                        </h2>
 
-                    <!-- QUANTIDADE DO PRODUTO -->
-                    <div class="btn-quantidade">
-                        <button class="diminuir-produto">
-                            -
-                        </button>
-                        <p class="quantidade-produto">
-                            1
+                        <p class="text-descricao-produto">
+                            <?= htmlspecialchars($produto['descricao']) ?>
                         </p>
-                        <button class="aumentar-quantidade">
-                            +
-                        </button>
+
                     </div>
 
-                    <!-- BOTÃO DE ADICIONAR PRODUTO AO CARRINHO -->
-                    <button class="btn-add-cart">
-                        <a href="">
-                        Adicionar ao Carrinho
-                        </a>
-                    </button>
+                    <!-- PREÇO -->
+                    <div class="preco-container">
+                        <span class="preco-label">
+                            Preço
+                        </span>
 
-                    <!-- BOTÃO DE COMPRAR AGORA -->
-                    <button class="btn-comprar">
-                        <a href="">
-                        Comprar Agora
-                        </a>
-                    </button>
+                        <h2 class="preco-produto">
+                            R$
+                            <?= number_format(
+                                $produto['preco_produto'],
+                                2,
+                                ',',
+                                '.'
+                            ) ?>
+                        </h2>
+                    </div>
 
+
+                    <!-- ESTOQUE -->
+                    <p class="estoque-produto">
+                        Estoque disponível:
+                        <strong>
+                            <?= htmlspecialchars($produto['estoque']) ?>
+                        </strong>
+
+                    </p>
+
+                    <div
+                        class="quantidade-container"
+                        data-estoque="<?= htmlspecialchars($produto['estoque']) ?>">
+
+                        <p class="quantidade-label">
+                            Quantidade
+                        </p>
+
+                        <div class="btn-quantidade">
+
+                            <button
+                                type="button"
+                                class="diminuir-produto"
+                                id="diminuir-produto">
+                                -
+                            </button>
+
+                            <p
+                                class="quantidade-produto"
+                                id="quantidade-produto">
+                                1
+                            </p>
+
+                            <button
+                                type="button"
+                                class="aumentar-quantidade"
+                                id="aumentar-quantidade">
+                                +
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <!-- AÇÕES DOS BOTÕES -->
+                    <div class="buttons-actions">
+
+                        <!-- BOTÃO ADICIONAR AO CARRINHO -->
+                        <a
+                            class="btn-add-cart"
+                            id="btn-add-cart"
+                            href="../carrinho-compras/carrinho-compras.php?adicionar=<?= $produto['pk_id_produtos'] ?>&quantidade=1">
+                            Adicionar ao Carrinho
+                        </a>
+
+                        <!-- BOTÃO COMPRAR AGORA -->
+                        <a
+                            class="btn-comprar"
+                            href="">
+                            Comprar Agora
+                        </a>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        const botaoDiminuir = document.getElementById('diminuir-produto');
+        const botaoAumentar = document.getElementById('aumentar-quantidade');
+        const quantidadeProduto = document.getElementById('quantidade-produto');
+        const quantidadeContainer = document.querySelector('.quantidade-container');
+        const botaoCarrinho = document.getElementById('btn-add-cart');
+
+
+        // Estoque vindo do PHP
+        const estoque = parseInt(quantidadeContainer.dataset.estoque);
+
+        // Quantidade inicial
+        let quantidade = 1;
+
+
+        // Atualiza a quantidade
+        function atualizarQuantidade() {
+
+            quantidadeProduto.textContent = quantidade;
+
+
+            // Atualiza o link do botão
+            botaoCarrinho.href =
+                "../carrinho-compras/carrinho-compras.php?adicionar=<?= $produto['pk_id_produtos'] ?>&quantidade=" + quantidade;
+
+
+            // Desabilita o -
+            if (quantidade <= 1) {
+
+                botaoDiminuir.disabled = true;
+
+            } else {
+
+                botaoDiminuir.disabled = false;
+
+            }
+
+
+            // Desabilita o +
+            if (quantidade >= estoque) {
+
+                botaoAumentar.disabled = true;
+
+            } else {
+
+                botaoAumentar.disabled = false;
+
+            }
+
+        }
+
+
+        // Aumentar
+        botaoAumentar.addEventListener('click', function() {
+
+            if (quantidade < estoque) {
+
+                quantidade++;
+
+                atualizarQuantidade();
+
+            }
+
+        });
+
+
+        // Diminuir
+        botaoDiminuir.addEventListener('click', function() {
+
+            if (quantidade > 1) {
+
+                quantidade--;
+
+                atualizarQuantidade();
+
+            }
+
+        });
+
+
+        // Estado inicial
+        atualizarQuantidade();
+    </script>
 
     <!-- PARTE FINAL DO SITE / FOOTER -->
     <footer>
@@ -218,6 +369,8 @@ if (!$produto) {
                 </div>
             </div>
     </footer>
+
+    <script src="script-produtos.js"></script>
 
 </body>
 
