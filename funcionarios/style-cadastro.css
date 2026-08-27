@@ -22,7 +22,7 @@
 /* DEFININDO AS FONTES PRINCIPAIS E A COR DO FUNDO */
 body {
     font-family: 'Baloo 2', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #fff;
+    background: #f5f5f5;
 }
 
 /* INFORMAÇÕES GERAIS DO HEADER */
@@ -33,7 +33,6 @@ body {
     top: 0;
     background: #fff;
     z-index: 1000;
-    margin-bottom: 15px;
 }
 
 /* PRIMEIRO TOP-BAR / TOP-BAR DE CIMA */
@@ -128,7 +127,6 @@ body {
     padding: 10px 30px;
     border-top: 1px solid var(--color-borda);
     background: var(--color-principal);
-    display: flex;
     justify-content: center;
     align-items: center;
 }
@@ -165,6 +163,10 @@ body {
     transform: scaleX(1);
 }
 
+button a {
+    text-decoration: none;
+}
+
 /* DROPDOWN - LINKS INTERNOS */
 .dropdown {
     position: relative;
@@ -177,7 +179,7 @@ body {
     top: 100%;
     left: 50%;
     transform: translateX(-50%);
-    background: var(--color-principal);
+    background: white;
     min-width: 200px;
     display: none;
     flex-direction: column;
@@ -208,11 +210,67 @@ body {
     display: flex;
 }
 
+/* DROPDOWN DA PARTE DO BOTÃO DO CADASTRO E LOGIN */
+.dropdown-button {
+    position: relative;
+}
+
+.button-dropdown {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--color-borda);
+    background: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: .3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-dropdown:hover {
+    background: var(--color-principal);
+}
+
+.button-dropdown:hover img {
+    filter: invert(1);
+}
+
+.conteudo-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 190px;
+    background: #fff;
+    border: 1px solid var(--color-borda);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .15);
+    z-index: 999;
+}
+
+.conteudo-dropdown a {
+    display: block;
+    padding: 12px 16px;
+    color: var(--color-texto);
+    text-decoration: none;
+    transition: .2s;
+}
+
+.conteudo-dropdown a:hover {
+    background: var(--color-principal);
+    color: #fff;
+}
+
+.dropdown-button:hover .conteudo-dropdown {
+    display: block;
+}
+
 /* PARTE DO FORM DE CADASTRO DE FUNCIONARIOS */
 .container-login {
     width: 100%;
     min-height: 100vh;
-    background: #efefef;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -228,7 +286,7 @@ body {
 
 .form-login {
     width: 100%;
-    max-width: 650px;
+    max-width: 670px;
     margin: auto;
     padding: 30px;
     background: white;
@@ -242,21 +300,29 @@ body {
 .form-login h1 {
     text-align: center;
     margin-bottom: 10px;
-    font-family: 'Baloo 2', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #222;
     font-weight: bolder;
 }
 
+.secao h2 {
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+
 .subtitulo {
     text-align: center;
     color: #777;
-    margin-top: -10px;
+    margin-top: 10px;
     margin-bottom: 10px;
 }
 
 .linha {
     display: flex;
-    gap: 15px;
+    gap: 20px;
     align-items: flex-end;
 }
 
@@ -270,6 +336,7 @@ body {
 .nome {
     flex: 1;
 }
+
 .campo label {
     font-size: 15px;
     font-weight: 600;
@@ -346,4 +413,127 @@ input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+
+/* RESPONSIVIDADE */
+/* RESPONSIVIDADE PARA TABLETS */
+@media (max-width: 992px){
+
+    .top-bar {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding:20px;
+    }
+
+    .search {
+        width:100%;
+        order:2;
+    }
+
+    .search input {
+        max-width:none;
+    }
+
+    .actions {
+        order:3;
+        width:100%;
+        justify-content:center;
+    }
+
+    .form-login {
+        width:95%;
+        max-width:700px;
+    }
+
+    .linha {
+        flex-direction:column;
+        gap:18px;
+        align-items:stretch;
+    }
+
+}
+
+/* RESPONSIVIDADE PARA CELULARES DE TAMANHO NORMAL */
+@media (max-width:768px) {
+
+    .img-logo {
+        width:140px;
+    }
+
+    .top-bar {
+        flex-direction:column;
+        align-items:center;
+        gap:18px;
+    }
+
+    .search {
+        width:100%;
+    }
+
+    .search input {
+        width:100%;
+    }
+
+    .search-btn {
+        width:45px;
+        min-width:45px;
+    }
+
+    .actions {
+        display:flex;
+        justify-content:center;
+        gap:15px;
+    }
+
+    /* Menu com rolagem horizontal */
+    .bottom-bar {
+        justify-content:flex-start;
+        overflow-x:auto;
+        white-space:nowrap;
+        flex-wrap:nowrap;
+        padding:12px;
+        gap:25px;
+        scrollbar-width:none;
+    }
+
+    .bottom-bar::-webkit-scrollbar {
+        display:none;
+    }
+
+    .bottom-bar a {
+        flex:none;
+    }
+
+    .container-login {
+        padding:15px;
+    }
+
+    .form-login {
+        width:100%;
+        padding:22px;
+        border-radius:15px;
+    }
+
+    .form-login h1 {
+        font-size:30px;
+    }
+
+    .secao {
+        padding:15px;
+    }
+
+    .linha {
+        gap:15px;
+    }
+
+    .campo input,
+    .campo textarea {
+        font-size:16px;
+    }
+
+    .grupo-radio {
+        flex-wrap:wrap;
+        gap:15px;
+    }
+
 }

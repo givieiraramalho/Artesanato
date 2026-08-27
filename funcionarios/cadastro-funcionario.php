@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -22,9 +26,23 @@
                     <img src="../img/search.svg" alt="Pesquisar"></button>
             </div>
 
-            <!-- IMAGENS/BOTÕES DO ENTRAR E DO CARRINHO -->
+             <!-- IMAGENS/BOTÕES DAS NOTIFICAÇÕES E DAS CONFIGURAÇÕES -->
             <div class="actions">
-               <button><a href=""><img src="../img/bell.svg" alt="Notificações"></a></button>
+                <div class="dropdown-button">
+                    <button class="button-dropdown">
+                        <img src="../img/person.svg" alt="Login">
+                    </button>
+
+                    <!-- CONTEÚDO DENTRO DO BOTÃO DE LOGIN -->
+                    <div class="conteudo-dropdown">
+                        <a href="#">Página do Admin <?= htmlspecialchars($_SESSION['user_nome'] ?? '') ?></a>
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            <a href="../banco/logout-admin.php">Sair</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                
+                <button><a href=""><img src="../img/bell.svg" alt="Notificações"></a></button>
                 <button><img src="../img/gear.svg" alt="Configurações"></button>
             </div>
         </div>
@@ -70,7 +88,7 @@
 
                     <div class="campo">
                         <label>Nome Completo</label>
-                        <input type="text" name="nome" placeholder="Digite o nome completo" required>
+                        <input type="text" name="nome" placeholder="Digite o nome completo" autocomplete="off" required>
                     </div>
 
                 </div>
@@ -81,7 +99,7 @@
 
                     <div class="campo">
                         <label>E-mail</label>
-                        <input type="email" name="email" placeholder="Digite o e-mail" required>
+                        <input type="email" name="email" placeholder="Digite o e-mail" autocomplete="off" required>
                     </div>
 
                 </div>
@@ -90,7 +108,7 @@
 
                 <div class="campo">
                     <label>Telefone</label>
-                    <input type="tel" name="telefone" id="telefone" maxlength="14" placeholder="(19) 99999-9999" required>
+                    <input type="tel" name="telefone" id="telefone" maxlength="15" oninput="aplicarMascara(this)" placeholder="(19) 99999-9999" required>
                 </div>
 
                 <br>
@@ -104,6 +122,7 @@
                             id="cpf"
                             maxlength="14"
                             placeholder="000.000.000-00"
+                            autocomplete="off"
                             required>
                     </div>
 
@@ -121,117 +140,138 @@
                 <div class="linha">
 
                     <div class="campo">
-                        <label>Cargo</label>
-                        <input type="text" name="cargo" placeholder="Cargo do funcionário" required>
-                    </div>
+                        <label class="titulo-radio">Cargo</label>
 
-                    <div class="campo">
-                        <label>Data de Nascimento</label>
-                        <input type="date" name="dtnasc" required>
+                        <div class="grupo-radio">
+
+                            <label class="opcao-radio">
+                                <input type="radio" name="cargo" value="Montador" checked>
+                                Montador
+                            </label>
+
+                            <label class="opcao-radio">
+                                <input type="radio" name="cargo" value="Pintor">
+                                Pintor
+                            </label>
+
+                            <label class="opcao-radio">
+                                <input type="radio" name="cargo" value="Embalador">
+                                Embalador
+                            </label>
+
+                            <label class="opcao-radio">
+                                <input type="radio" name="cargo" value="Jovem Aprendiz">
+                                Jovem Aprendiz
+                            </label>
+
+                            <label class="opcao-radio">
+                                <input type="radio" name="cargo" value="Administração">
+                                Administração
+                            </label>
+
+                        </div>
                     </div>
                 </div>
 
-                <br>
-
-                <div class="campo">
-
-                    <label class="titulo-radio">Status do Funcionário</label>
-
-                    <div class="grupo-radio">
-
-                        <label class="opcao-radio">
-                            <input type="radio" name="status" value="1" checked>
-                            Ativo
-                        </label>
-
-                        <label class="opcao-radio">
-                            <input type="radio" name="status" value="0">
-                            Desativo
-                        </label>
-
-                    </div>
-                </div>
-                
-                <br>
-
-                <div class="linha">
+                    <br>
 
                     <div class="campo">
-                        <label>Senha</label>
+                        <label for="dtnasc">Data de Nascimento</label>
+                        <input type="date" id="dtnasc" name="dtnasc" required>
+                    </div>
+
+                    <br>
+
+                    <div class="campo">
+
+                        <label class="titulo-radio">Status do Funcionário</label>
+
+                        <div class="grupo-radio">
+
+                            <label class="opcao-radio">
+                                <input type="radio" name="status" value="1" checked>
+                                Ativo
+                            </label>
+
+                            <label class="opcao-radio">
+                                <input type="radio" name="status" value="0">
+                                Desativo
+                            </label>
+
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="linha">
+
+                        <div class="campo">
+                            <label>Senha</label>
+                            <input type="password"
+                                name="senha"
+                                placeholder="Digite a senha"
+                                pattern="(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}"
+                                title="A senha deve conter pelo menos 8 caracteres, uma letra maiúscula e um caractere especial."
+                                required>
+                        </div>
+
+                    </div>
+
+                    <br>
+
+                    <div class="campo">
+                        <label>Confirmar Senha</label>
                         <input type="password"
-                            name="senha"
-                            placeholder="Digite a senha"
+                            name="repetir_senha"
+                            placeholder="Repita a senha"
                             pattern="(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}"
+                            title="A senha deve conter pelo menos 8 caracteres, uma letra maiúscula e um caractere especial."
                             required>
+
+                    </div>
+                </div>
+
+                <!-- CONTATO DE EMERGÊNCIA -->
+                <div class="secao">
+
+                    <h2>Contato de Emergência</h2>
+
+                    <p class="subtitulo" style="text-align:left; margin-top:10px;">
+                        Caso ocorra alguma emergência, entraremos em contato com a pessoa cadastrada abaixo.
+                    </p>
+
+                    <div class="linha">
+
+                        <div class="campo">
+                            <label>Nome do Contato</label>
+                            <input type="text" name="nomeEmergencia" placeholder="Nome completo" autocomplete="off">
+                        </div>
+
+                    </div>
+
+                    <br>
+
+                    <div class="linha">
+
+                        <div class="campo">
+                            <label>Telefone do Contato</label>
+                            <input type="tel" name="telEmergencia" id="tel-emergencia" maxlength="15" oninput="aplicarMascara(this)" placeholder="(19) 99999-9999">
+                        </div>
+
                     </div>
 
                 </div>
 
-                <br>
-
-                <div class="campo">
-                    <label>Confirmar Senha</label>
-                    <input type="password"
-                        name="repetir_senha"
-                        placeholder="Repita a senha"
-                        pattern="(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}"
-                        required>
-
-                </div>
-            </div>
-
-            <!-- CONTATO DE EMERGÊNCIA -->
-            <div class="secao">
-
-                <h2>Contato de Emergência</h2>
-
-                <p class="subtitulo" style="text-align:left; margin-top:10px;">
-                    Caso ocorra alguma emergência, entraremos em contato com a pessoa cadastrada abaixo.
-                </p>
-
-                <div class="linha">
-
-                    <div class="campo">
-                        <label>Nome do Contato</label>
-                        <input type="text" name="nomeEmergencia" placeholder="Nome completo">
-                    </div>
-
-                </div>
-
-                <br>
-
-                <div class="linha">
-
-                    <div class="campo">
-                        <label>Telefone do Contato</label>
-                        <input type="tel" name="telEmergencia" id="tel-emergencia" maxlength="14" placeholder="(19) 99999-9999">
-                    </div>
-
-                </div>
-
-            </div>
-
-            <button type="submit" class="btn-submit">
-                Cadastrar Funcionário
-            </button>
+                <button type="submit" class="btn-submit">
+                    Cadastrar Funcionário
+                </button>
 
         </form>
 
     </div>
 
-    <!-- PARTE DO SCRIPT DO JAVASCRIPT PARA A VALIDAÇÃO DO CPF -->
-    <script>
-        document.getElementById('cpf').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, ''); // Remove não números
-            if (value.length > 3 && value.length <= 6)
-                value = value.replace(/(\d{3})(\d+)/, '$1.$2');
-            else if (value.length > 6 && value.length <= 9)
-                value = value.replace(/(\d{3})(\d{3})(\d+)/, '$1.$2.$3');
-            else if (value.length > 9)
-                value = value.replace(/(\d{3})(\d{3})(\d{3})(\d+)/, '$1.$2.$3-$4');
-            e.target.value = value;
-        });
-    </script>
+    <!-- PARTE DO SCRIPT DO SITE -->
+    <script src="../funcionarios/script-cadastro.js"></script>
 
 </body>
 
