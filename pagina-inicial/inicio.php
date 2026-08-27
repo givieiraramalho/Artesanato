@@ -1,10 +1,15 @@
 <?php
+
+require '../banco/config.php';
+
 session_start();
 
 if (isset($_SESSION['sucesso_login'])) {
     echo "<script>alert('" . addslashes($_SESSION['sucesso_login']) . "');</script>";
     unset($_SESSION['sucesso_login']);
 }
+
+$sql = $pdo->query("SELECT * FROM categorias WHERE pk_id_categorias = 2");
 ?>
 
 <!DOCTYPE html>
@@ -71,11 +76,11 @@ if (isset($_SESSION['sucesso_login'])) {
                 <a href="#" class="link-animado">Categorias</a>
 
                 <div class="dropdown-menu">
-                    <a href="#">Todos</a>
-                    <a href="#">Recomendados</a>
-                    <a href="#">Destaques</a>
-                    <a href="#">Promoções</a>
-                    <a href="#">Mais Vendidos</a>
+                    <a href="../produtos/produtos.php?categoria=1">Todos</a>
+                    <a href="../produtos/produtos.php?categoria=2">Recomendados</a>
+                    <a href="../produtos/produtos.php?categoria=3">Destaques</a>
+                    <a href="../produtos/produtos.php?categoria=4">Promoções</a>
+                    <a href="../produtos/produtos.php?categoria=5">Mais Vendidos</a>
                 </div>
             </div>
             <a href="../sobre/sobre.php" class="link-animado">Sobre</a>
@@ -179,16 +184,16 @@ if (isset($_SESSION['sucesso_login'])) {
             <div class="link-boxes">
                 <ul class="boxes">
                     <li class="link_name">Sobre a Empresa</li>
-                    <li><a href="#">Início</a></li>
+                    <li><a href="../pagina-inicial/inicio.php">Início</a></li>
                     <li><a href="#">Contatos</a></li>
                     <li><a href="#">Endereços</a></li>
-                    <li><a href="#">Nossa História</a></li>
+                    <li><a href="../sobre/sobre.php">Nossa História</a></li>
                 </ul>
                 <div class="link-boxes">
                     <ul class="boxes">
                         <li class="link_name">Produtos</li>
-                        <li><a href="#">Início</a></li>
-                        <li><a href="#">Todos os Produtos</a></li>
+                        <li><a href="../produtos/produtos.php">Início</a></li>
+                        <li><a href="../produtos/produtos.php">Todos os Produtos</a></li>
                         <li><a href="#">Novidades</a></li>
                         <li><a href="#">Promoções</a></li>
                     </ul>
