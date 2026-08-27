@@ -1,3 +1,21 @@
+<?php
+
+//Parte do código responsável por mostrar todas as informações da tabela Categorias
+require '../banco/config.php';
+
+//Iniciaando a sessão do admin
+session_start();
+
+//Fazendo o Select da tabela da categoria de Produtos
+$listaCategorias = [];
+
+$sql = $pdo->query("SELECT * FROM categorias");
+if ($sql->rowCount() > 0) {
+    $listaCategorias = $sql->fetchAll(PDO::FETCH_ASSOC);
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -23,15 +41,29 @@
                     <img src="../img/search.svg" alt="Pesquisar"></button>
             </div>
 
-             <!-- IMAGENS/BOTÕES DAS NOTIFICAÇÕES E DAS CONFIGURAÇÕES -->
+            <!-- IMAGENS/BOTÕES DAS NOTIFICAÇÕES E DAS CONFIGURAÇÕES -->
             <div class="actions">
+                <div class="dropdown-button">
+                    <button class="button-dropdown">
+                        <img src="../img/person.svg" alt="Login">
+                    </button>
+
+                    <!-- CONTEÚDO DENTRO DO BOTÃO DE LOGIN -->
+                    <div class="conteudo-dropdown">
+                        <a href="#">Página do Admin <?= htmlspecialchars($_SESSION['user_nome'] ?? '') ?></a>
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            <a href="../banco/logout-admin.php">Sair</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
                 <button><a href=""><img src="../img/bell.svg" alt="Notificações"></a></button>
                 <button><img src="../img/gear.svg" alt="Configurações"></button>
             </div>
         </div>
 
         <!-- PARTE DOS LINKS DE NAVEGAÇÃO -->
-         <div class="bottom-bar">
+        <div class="bottom-bar">
             <a href="../admin/pagina-inicial-adm.php" class="link-animado">Início</a>
             <a href="../editar-produtos/edit-products.php" class="link-animado">Editar Produtos</a>
             <div class="dropdown">
@@ -61,19 +93,19 @@
                 Preencha as informações para adicionar um novo produto.
             </p>
 
-           <!-- SEÇÃO: INFORMAÇÕES DO PRODUTO -->
-        <div class="secao">
+            <!-- SEÇÃO: INFORMAÇÕES DO PRODUTO -->
+            <div class="secao">
 
-            <h3>Informações do Produto</h3>
+                <h3>Informações do Produto</h3>
 
-            <div class="campo">
-                <label>Nome do Produto</label>
-                <input type="text" name="nome" placeholder="Digite o nome do produto" required>
-            </div>
+                <div class="campo">
+                    <label>Nome do Produto</label>
+                    <input type="text" name="nome" placeholder="Digite o nome do produto" required>
+                </div>
 
-            <br>
+                <br>
 
-             <div class="campo">
+                <div class="campo">
 
                     <label class="titulo-radio">Status do Produto</label>
 
@@ -89,77 +121,98 @@
                             Desativo
                         </label>
                     </div>
-             </div>
 
-        </div>
 
-        <!-- SEÇÃO: PREÇO -->
-        <div class="secao">
+                    <div class="mb-3">
+                        <label class="form-label">Categorias</label>
 
-            <h3>Valores</h3>
+                        <div class="categorias-container">
+                            <?php foreach ($listaCategorias as $categorias): ?>
+                                <label class="categoria-item" for="cat<?= $categorias['pk_id_categorias'] ?>">
+                                    <input
+                                        type="checkbox"
+                                        name="categorias[]"
+                                        value="<?= $categorias['pk_id_categorias'] ?>"
+                                        id="cat<?= $categorias['pk_id_categorias'] ?>">
 
-            <div class="linha">
-
-                <div class="campo">
-                    <label>Preço</label>
-                    <input type="number" step="0.01" name="preco" placeholder="R$ 0,00" required>
+                                    <?= htmlspecialchars($categorias['nome_categoria']) ?>
+                                </label>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                <div class="campo">
-                    <label>Desconto (%)</label>
-                    <input type="number" step="0.01" name="desconto" placeholder="Ex: 15%" required>
-                </div>
 
-                <div class="campo">
-                    <label>Estoque</label>
-                    <input type="number" step="1" name="estoque" placeholder="Ex: 10" required>
-                </div>
+                <!-- SEÇÃO: PREÇO -->
+                <div class="secao">
+
+                    <h3>Valores</h3>
+
+                    <div class="linha">
+
+                        <div class="campo">
+                            <label>Preço</label>
+                            <input type="number" step="0.01" name="preco" placeholder="R$ 0,00" required>
+                        </div>
+
+                        <div class="campo">
+                            <label>Desconto (%)</label>
+                            <input type="number" step="0.01" name="desconto" placeholder="Ex: 15%" required>
+                        </div>
+
+                        <div class="campo">
+                            <label>Estoque</label>
+                            <input type="number" step="1" name="estoque" placeholder="Ex: 10" required>
+                        </div>
 
                     </div>
                 </div>
 
-        <!-- SEÇÃO: DESCRIÇÃO -->
-        <div class="secao">
+                <!-- SEÇÃO: DESCRIÇÃO -->
+                <div class="secao">
 
-            <h3>Descrição</h3>
+                    <h3>Descrição</h3>
 
-            <div class="campo">
-                <label>Descrição do Produto</label>
-                <textarea name="descricao" placeholder="Descreva o produto..." required></textarea>
+                    <div class="campo">
+                        <label>Descrição do Produto</label>
+                        <textarea name="descricao" placeholder="Descreva o produto..." required></textarea>
+                    </div>
+
+                </div>
+
+                <!-- SEÇÃO: IMAGEM -->
+                <div class="secao">
+
+                    <h3>Imagem do Produto</h3>
+
+                    <div class="campo">
+                        <label>Foto do Produto</label>
+                        <input type="file" class="img-produto" name="foto" accept=".jpg,.jpeg,.png" required>
+                    </div>
+
+                </div>
+
+                <!-- SEÇÃO: DESCRIÇÃO -->
+                <div class="secao">
+
+                    <h3>Descrição da Imagem (Opcional)</h3>
+
+                    <div class="campo">
+                        <label>Descrição da Imagem</label>
+                        <textarea name="descricaoImage" placeholder="Descreva a imagem"></textarea>
+                    </div>
+
+                </div>
+
+                <!-- BOTÃO -->
+                <button type="submit" class="btn-submit">
+                    Cadastrar Produto
+                </button>
+
             </div>
 
-        </div>
-
-        <!-- SEÇÃO: IMAGEM -->
-        <div class="secao">
-
-            <h3>Imagem do Produto</h3>
-
-            <div class="campo">
-                <label>Foto do Produto</label>
-                <input type="file" class="img-produto" name="foto" accept=".jpg,.jpeg,.png" required>
-            </div>
-
-        </div>
-
-         <!-- SEÇÃO: DESCRIÇÃO -->
-        <div class="secao">
-
-            <h3>Descrição da Imagem (Opcional)</h3>
-
-            <div class="campo">
-                <label>Descrição da Imagem</label>
-                <textarea name="descricaoImage" placeholder="Descreva a imagem" ></textarea>
-            </div>
-
-        </div>
-
-        <!-- BOTÃO -->
-        <button type="submit" class="btn-submit">
-            Cadastrar Produto
-        </button>
-
+        </form>
     </div>
 
-    </form>
-    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>

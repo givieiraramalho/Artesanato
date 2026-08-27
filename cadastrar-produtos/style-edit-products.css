@@ -22,7 +22,7 @@
 /* DEFININDO AS FONTES PRINCIPAIS E A COR DO FUNDO */
 body {
     font-family: 'Baloo 2', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #fff;
+    background: #f5f5f5;
 }
 
 /* INFORMAÇÕES GERAIS DO HEADER */
@@ -33,7 +33,6 @@ body {
     top: 0;
     background: #fff;
     z-index: 1000;
-    margin-bottom: 15px;
 }
 
 /* PRIMEIRO TOP-BAR / TOP-BAR DE CIMA */
@@ -124,17 +123,18 @@ body {
 /* PARTE DE BAIXO COM OS LINKS DE NAVEGAÇÃO */
 .bottom-bar {
     display: flex;
+    flex-wrap: wrap;
     gap: 30px;
     padding: 10px 30px;
     border-top: 1px solid var(--color-borda);
     background: var(--color-principal);
-    display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .bottom-bar a {
     text-decoration: none;
+    padding: 8px 0;
     color: #ffffff;
     font-size: 15px;
     position: relative;
@@ -165,6 +165,10 @@ body {
     transform: scaleX(1);
 }
 
+button a {
+    text-decoration: none;
+}
+
 /* DROPDOWN - LINKS INTERNOS */
 .dropdown {
     position: relative;
@@ -177,7 +181,7 @@ body {
     top: 100%;
     left: 50%;
     transform: translateX(-50%);
-    background: var(--color-principal);
+    background: white;
     min-width: 200px;
     display: none;
     flex-direction: column;
@@ -206,6 +210,63 @@ body {
 /* MOSTRAR AO PASSAR O MOUSE */
 .dropdown:hover .dropdown-menu {
     display: flex;
+}
+
+/* DROPDOWN DA PARTE DO BOTÃO DO CADASTRO E LOGIN */
+.dropdown-button {
+    position: relative;
+}
+
+.button-dropdown {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--color-borda);
+    background: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: .3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-dropdown:hover {
+    background: var(--color-principal);
+}
+
+.button-dropdown:hover img {
+    filter: invert(1);
+}
+
+.conteudo-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 190px;
+    background: #fff;
+    border: 1px solid var(--color-borda);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .15);
+    z-index: 999;
+}
+
+.conteudo-dropdown a {
+    display: block;
+    padding: 12px 16px;
+    color: var(--color-texto);
+    text-decoration: none;
+    transition: .2s;
+}
+
+.conteudo-dropdown a:hover {
+    background: var(--color-principal);
+    color: #fff;
+}
+
+.dropdown-button:hover .conteudo-dropdown {
+    display: block;
 }
 
 /* PARTE DO FORM DE CADASTRO DE PRODUTOS */
@@ -311,20 +372,20 @@ body {
 }
 
 /* PARTE DO RADIO BUTTON */
-.titulo-radio{
+.titulo-radio {
     font-size: 15px;
     font-weight: 600;
     color: #333;
     margin-bottom: 10px;
 }
 
-.grupo-radio{
+.grupo-radio {
     display: flex;
     gap: 25px;
     align-items: center;
 }
 
-.opcao-radio{
+.opcao-radio {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -333,10 +394,30 @@ body {
     color: #444;
 }
 
-.opcao-radio input[type="radio"]{
+.opcao-radio input[type="radio"] {
     width: 18px;
     height: 18px;
     cursor: pointer;
+}
+
+/* PARTE DAS CATEGORIAS DOS PRODUTOS */
+.categorias-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 20px;
+    margin-top: 10px;
+}
+
+.categoria-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.categoria-item input {
+    width: auto;
+    margin: 0;
 }
 
 /* PARTE DO BOTÃO QUE IRÁ ENVIAR AS INFORMAÇÕES PARA O BANCO */
@@ -361,4 +442,236 @@ input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+
+/* RESPONSIVIDADE */
+/* Notebook pequeno */
+@media (max-width: 1200px) {
+
+    .form-login {
+        max-width: 90%;
+    }
+
+}
+
+/* Tablets */
+@media (max-width: 992px) {
+
+    /* Header */
+    .top-bar {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .img-logo {
+        width: 140px;
+    }
+
+    .search {
+        width: 100%;
+    }
+
+    .search input {
+        max-width: none;
+    }
+
+    .actions {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .bottom-bar {
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .bottom-bar a {
+        font-size: 14px;
+    }
+
+    /* Formulário */
+
+    .container-login {
+        padding: 25px;
+    }
+
+    .form-login {
+        width: 100%;
+        max-width: 100%;
+        padding: 25px;
+    }
+
+    .linha {
+        flex-wrap: wrap;
+    }
+
+    .linha .campo {
+        flex: 1 1 45%;
+    }
+
+}
+
+/* Celulares */
+@media (max-width: 768px) {
+
+    /* Header */
+
+    .top-bar {
+        flex-direction: column;
+        gap: 18px;
+        padding: 15px;
+    }
+
+    .img-logo {
+        width: 120px;
+    }
+
+    .search {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .search input {
+        width: 100%;
+        max-width: none;
+    }
+
+    .search-btn {
+        width: 100%;
+        height: 45px;
+    }
+
+    .actions {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .bottom-bar {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+    }
+
+    .bottom-bar a {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Form */
+
+    .container-login {
+        padding: 15px;
+    }
+
+    .form-login {
+        padding: 20px;
+        border-radius: 15px;
+        gap: 20px;
+    }
+
+    .form-login h1 {
+        font-size: 2rem;
+    }
+
+    .subtitulo {
+        font-size: 14px;
+    }
+
+    .secao {
+        padding: 18px;
+    }
+
+    .secao h3 {
+        font-size: 20px;
+    }
+
+    /* Campos */
+
+    .linha {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .linha .campo {
+        width: 100%;
+    }
+
+    .preco {
+        width: 100%;
+    }
+
+    .campo label {
+        font-size: 14px;
+    }
+
+    .form-login input,
+    .form-login textarea {
+        padding: 12px;
+        font-size: 15px;
+    }
+
+    .grupo-radio {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 14px;
+    }
+
+}
+
+/* Celulares pequenos */
+@media (max-width: 480px) {
+
+    .top-bar {
+        padding: 12px;
+    }
+
+    .img-logo {
+        width: 100px;
+    }
+
+    .actions button {
+        width: 40px;
+        height: 40px;
+    }
+
+    .form-login {
+        padding: 15px;
+    }
+
+    .form-login h1 {
+        font-size: 1.7rem;
+    }
+
+    .subtitulo {
+        font-size: 13px;
+    }
+
+    .secao {
+        padding: 15px;
+    }
+
+    .secao h3 {
+        font-size: 18px;
+    }
+
+    .campo label {
+        font-size: 13px;
+    }
+
+    .form-login input,
+    .form-login textarea {
+        font-size: 14px;
+    }
+
+    .btn-submit {
+        font-size: 15px;
+    }
+
 }
