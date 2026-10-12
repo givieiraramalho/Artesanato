@@ -98,7 +98,15 @@ session_start();
 
             <!-- DATA DE NASCIMENTO DA PESSOA -->
             <h2 class="info-usuario">Data de Nascimento</h2>
-            <input type="date" id="dtnasc" class="input" name="dtnasc" required>
+
+            <input
+                type="date"
+                id="dtnasc"
+                class="input"
+                name="dtnasc"
+                min="1900-01-01"
+                max="<?= date('Y-m-d') ?>"
+                required>
 
             <!-- CPF DA PESSOA -->
             <h2 class="info-usuario">CPF ou CNPJ</h2>
