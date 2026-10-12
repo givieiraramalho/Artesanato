@@ -30,9 +30,45 @@ if ($sql->rowCount() > 0) {
 <body>
     <div class="header">
 
+        <!-- MENU LATERAL MOBILE -->
+        <div class="menu-mobile" id="menuMobile">
+            <div class="menu-mobile-conteudo">
+
+                <button class="fechar-menu" onclick="fecharMenu()">
+                    ✕
+                </button>
+
+                <a href="../admin/pagina-inicial-adm.php">Início</a>
+                <a href="../editar-produtos/edit-products.php">Editar Produtos</a>
+
+                <div class="menu-mobile-titulo">
+                    Cadastro
+                </div>
+
+                <a href="../cadastrar-produtos/cadastro-produtos.php">
+                    Produtos
+                </a>
+
+                <a href="../categorias/categorias.php">
+                    Categorias
+                </a>
+
+                <a href="../pagamento/forma-pagamento.php">
+                    Forma de Pagamento
+                </a>
+
+                <a href="../admin/analisar-vendas/analisar-vendas.php">Analisar Vendas</a>
+
+            </div>
+        </div>
+
         <!-- PARTE DE CIMA DO TOP BAR -->
         <div class="top-bar">
-            <a href=""><img src="../img/artes-removebg-preview.png" class="img-logo" alt="Logo"></a>
+            <a href="javascript:void(0)" onclick="abrirMenu()">
+                <img src="../img/artes-removebg-preview.png"
+                    class="img-logo"
+                    alt="Logo">
+            </a>
 
             <!-- BARRA DE PESQUISA -->
             <div class="search">
@@ -50,7 +86,7 @@ if ($sql->rowCount() > 0) {
 
                     <!-- CONTEÚDO DENTRO DO BOTÃO DE LOGIN -->
                     <div class="conteudo-dropdown">
-                        <a href="#">Página do Admin <?= htmlspecialchars($_SESSION['user_nome'] ?? '') ?></a>
+                        <a href="#">Página <?= htmlspecialchars($_SESSION['user_nome'] ?? '') ?></a>
                         <?php if (isset($_SESSION['user_id'])): ?>
                             <a href="../banco/logout-admin.php">Sair</a>
                         <?php endif; ?>
@@ -58,7 +94,6 @@ if ($sql->rowCount() > 0) {
                 </div>
 
                 <button><a href=""><img src="../img/bell.svg" alt="Notificações"></a></button>
-                <button><img src="../img/gear.svg" alt="Configurações"></button>
             </div>
         </div>
 
@@ -74,11 +109,9 @@ if ($sql->rowCount() > 0) {
                     <a href="../cadastrar-produtos/cadastro-produtos.php">Produtos</a>
                     <a href="../categorias/categorias.php">Categorias</a>
                     <a href="../pagamento/forma-pagamento.php">Forma de Pagamento</a>
-                    <a href="#">Funcionários</a>
                 </div>
             </div>
-            <a href="" class="link-animado">Analisar Vendas</a>
-            <a href="" class="link-animado"></a>
+            <a href="../admin/analisar-vendas/analisar-vendas.php" class="link-animado">Analisar Vendas</a>
         </div>
     </div>
     </div>
@@ -144,75 +177,65 @@ if ($sql->rowCount() > 0) {
             </div>
 
 
-                <!-- SEÇÃO: PREÇO -->
-                <div class="secao">
+            <!-- SEÇÃO: PREÇO -->
+            <div class="secao">
 
-                    <h3>Valores</h3>
+                <h3>Valores</h3>
 
-                    <div class="linha">
-
-                        <div class="campo">
-                            <label>Preço</label>
-                            <input type="number" step="0.01" name="preco" placeholder="R$ 0,00" required>
-                        </div>
-
-                        <div class="campo">
-                            <label>Desconto (%)</label>
-                            <input type="number" step="0.01" name="desconto" placeholder="Ex: 15%" required>
-                        </div>
-
-                        <div class="campo">
-                            <label>Estoque</label>
-                            <input type="number" step="1" name="estoque" placeholder="Ex: 10" required>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- SEÇÃO: DESCRIÇÃO -->
-                <div class="secao">
-
-                    <h3>Descrição</h3>
+                <div class="linha">
 
                     <div class="campo">
-                        <label>Descrição do Produto</label>
-                        <textarea name="descricao" placeholder="Descreva o produto..." required></textarea>
+                        <label>Preço</label>
+                        <input type="number" step="0.01" name="preco" placeholder="R$ 0,00" required>
                     </div>
-
-                </div>
-
-                <!-- SEÇÃO: IMAGEM -->
-                <div class="secao">
-
-                    <h3>Imagem do Produto</h3>
 
                     <div class="campo">
-                        <label>Foto do Produto</label>
-                        <input type="file" class="img-produto" name="foto" accept=".jpg,.jpeg,.png" required>
+                        <label>Desconto (%)</label>
+                        <input type="number" step="0.01" name="desconto" placeholder="Ex: 15%" required>
                     </div>
-
-                </div>
-
-                <!-- SEÇÃO: DESCRIÇÃO -->
-                <div class="secao">
-
-                    <h3>Descrição da Imagem (Opcional)</h3>
 
                     <div class="campo">
-                        <label>Descrição da Imagem</label>
-                        <textarea name="descricaoImage" placeholder="Descreva a imagem"></textarea>
+                        <label>Estoque</label>
+                        <input type="number" step="1" name="estoque" placeholder="Ex: 10" required>
                     </div>
 
                 </div>
+            </div>
 
-                <!-- BOTÃO -->
-                <button type="submit" class="btn-submit">
-                    Cadastrar Produto
-                </button>
+            <!-- SEÇÃO: IMAGEM -->
+            <div class="secao">
+
+                <h3>Imagem do Produto</h3>
+
+                <div class="campo">
+                    <label>Foto do Produto</label>
+                    <input type="file" class="img-produto" name="foto" accept=".jpg,.jpeg,.png" required>
+                </div>
 
             </div>
 
-        </form>
+            <!-- SEÇÃO: DESCRIÇÃO -->
+            <div class="secao">
+
+                <h3>Descrição</h3>
+
+                <div class="campo">
+                    <label>Descrição do Produto</label>
+                    <textarea name="descricao" placeholder="Descreva o produto..." required></textarea>
+                </div>
+
+            </div>
+
+            <!-- BOTÃO -->
+            <button type="submit" class="btn-submit">
+                Cadastrar Produto
+            </button>
+
     </div>
 
+    </form>
+    </div>
+
+    <!-- PARTE DO JAVASCRIPT -->
+    <script src="../js/script-adm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
