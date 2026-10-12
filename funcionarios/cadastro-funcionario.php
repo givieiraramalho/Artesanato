@@ -15,9 +15,45 @@ session_start();
 <body>
     <div class="header">
 
+         <!-- MENU LATERAL MOBILE -->
+        <div class="menu-mobile" id="menuMobile">
+            <div class="menu-mobile-conteudo">
+
+                <button class="fechar-menu" onclick="fecharMenu()">
+                    ✕
+                </button>
+
+                <a href="../admin/pagina-inicial-adm.php">Início</a>
+                <a href="../editar-produtos/edit-products.php">Editar Produtos</a>
+
+                <div class="menu-mobile-titulo">
+                    Cadastro
+                </div>
+
+                <a href="../cadastrar-produtos/cadastro-produtos.php">
+                    Produtos
+                </a>
+
+                <a href="../categorias/categorias.php">
+                    Categorias
+                </a>
+
+                <a href="../pagamento/forma-pagamento.php">
+                    Forma de Pagamento
+                </a>
+
+                <a href="#">Analisar Vendas</a>
+
+            </div>
+        </div>
+
         <!-- PARTE DE CIMA DO TOP BAR -->
         <div class="top-bar">
-            <a href=""><img src="../img/artes-removebg-preview.png" class="img-logo" alt="Logo"></a>
+            <a href="javascript:void(0)" onclick="abrirMenu()">
+                <img src="../img/artes-removebg-preview.png"
+                    class="img-logo"
+                    alt="Logo">
+            </a>
 
             <!-- BARRA DE PESQUISA -->
             <div class="search">
@@ -43,7 +79,6 @@ session_start();
                 </div>
                 
                 <button><a href=""><img src="../img/bell.svg" alt="Notificações"></a></button>
-                <button><img src="../img/gear.svg" alt="Configurações"></button>
             </div>
         </div>
 
@@ -51,19 +86,20 @@ session_start();
         <div class="bottom-bar">
             <a href="../admin/pagina-inicial-adm.php" class="link-animado">Início</a>
             <a href="../editar-produtos/edit-products.php" class="link-animado">Editar Produtos</a>
+
+            <!-- MENU DO DROPDOWN -->
             <div class="dropdown">
                 <a href="#" class="link-animado">Cadastro</a>
 
                 <div class="dropdown-menu">
                     <a href="../cadastrar-produtos/cadastro-produtos.php">Produtos</a>
                     <a href="../categorias/categorias.php">Categorias</a>
-                    <a href="#">Forma de Pagamento</a>
+                    <a href="../pagamento/forma-pagamento.php">Forma de Pagamento</a>
                     <a href="../funcionarios/cadastro-funcionario.php">Funcionários</a>
                 </div>
             </div>
 
-            <a href="" class="link-animado">Analisar Vendas</a>
-            <a href="" class="link-animado"></a>
+            <a href="#" class="link-animado">Analisar Vendas</a>
         </div>
     </div>
     </div>
@@ -271,6 +307,7 @@ session_start();
     </div>
 
     <!-- PARTE DO SCRIPT DO SITE -->
+     <script src="../js/script-adm.js"></script>
     <script src="../funcionarios/script-cadastro.js"></script>
 
 </body>

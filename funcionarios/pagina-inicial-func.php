@@ -3,6 +3,8 @@
 //PARTE DO CÓDIGO PHP RESPONSÁVEL POR MOSTRAR TODOS OS DADOS ARMAZENADOS NAS TABELAS DE FUNCIONÁRIOS, CATEGORIAS DE PRODUTOS E DAS FORMAS DE PAGAMENTO
 require '../banco/config.php';
 
+session_start();
+
 //Fazendo o Select da tabela da categoria de Produtos
 $listaCategorias = [];
 
@@ -34,7 +36,7 @@ if ($sql->rowCount() > 0) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Artesanatos Eloi</title>
+    <title>Página Funcionários - Artesanatos Eloi</title>
     <link rel="stylesheet" href="../admin/css/style-pagina-adm.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
@@ -42,9 +44,45 @@ if ($sql->rowCount() > 0) {
 <body>
     <div class="header">
 
+        <!-- MENU LATERAL MOBILE -->
+        <div class="menu-mobile" id="menuMobile">
+            <div class="menu-mobile-conteudo">
+
+                <button class="fechar-menu" onclick="fecharMenu()">
+                    ✕
+                </button>
+
+                <a href="../funcionarios/pagina-inicial-func.php">Início</a>
+                <a href="../editar-produtos/edit-products.php">Editar Produtos</a>
+
+                <div class="menu-mobile-titulo">
+                    Cadastro
+                </div>
+
+                <a href="../cadastrar-produtos/cadastro-produtos.php">
+                    Produtos
+                </a>
+
+                <a href="../categorias/categorias.php">
+                    Categorias
+                </a>
+
+                <a href="../pagamento/forma-pagamento.php">
+                    Forma de Pagamento
+                </a>
+
+                <a href="#">Analisar Vendas</a>
+
+            </div>
+        </div>
+
         <!-- PARTE DE CIMA DO TOP BAR -->
         <div class="top-bar">
-            <a href=""><img src="../img/artes-removebg-preview.png" class="img-logo" alt="Logo"></a>
+            <a href="javascript:void(0)" onclick="abrirMenu()">
+                <img src="../img/artes-removebg-preview.png"
+                    class="img-logo"
+                    alt="Logo">
+            </a>
 
             <!-- BARRA DE PESQUISA -->
             <form method="POST" class="search">
@@ -52,7 +90,7 @@ if ($sql->rowCount() > 0) {
                     type="text"
                     name="search"
                     id="pesquisar"
-                    placeholder="Buscar funcionários..."
+                    placeholder="Buscar Produtos..."
                     value="<?= isset($_POST['search']) ? htmlspecialchars($_POST['search']) : '' ?>">
 
                 <button type="submit" class="search-btn">
@@ -62,14 +100,36 @@ if ($sql->rowCount() > 0) {
 
             <!-- IMAGENS/BOTÕES DAS NOTIFICAÇÕES E DAS CONFIGURAÇÕES -->
             <div class="actions">
-                <button><a href=""><img src="../img/bell.svg" alt="Notificações"></a></button>
-                <button><img src="../img/gear.svg" alt="Configurações"></button>
+
+                <div class="dropdown-button">
+
+                    <button class="button-dropdown">
+                        <img src="../img/person.svg" alt="Login">
+                    </button>
+
+                    <div class="conteudo-dropdown">
+                        <a href="../funcionarios/pagina-inicial-func.php">
+                            Página do Funcionário
+                            <?= htmlspecialchars($_SESSION['user_nome'] ?? '') ?>
+                        </a>
+
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            <a href="../banco/logout-usuario.php">Sair</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- BOTÃO DE NOTIFICAÇÃO -->
+                <button>
+                    <a href=""><img src="../img/bell.svg" alt="Notificações"></a>
+                </button>
+
             </div>
         </div>
 
         <!-- PARTE DE BAIXO DO TOP BAR COM OS LINKS DE NAVEGAÇÃO -->
         <div class="bottom-bar">
-            <a href="../admin/pagina-inicial-adm.php" class="link-animado">Início</a>
+            <a href="../funcionarios/pagina-inicial-func.php" class="link-animado">Início</a>
             <a href="../editar-produtos/edit-products.php" class="link-animado">Editar Produtos</a>
             <div class="dropdown">
                 <a href="#" class="link-animado">Cadastro</a>
@@ -80,10 +140,10 @@ if ($sql->rowCount() > 0) {
                     <a href="../pagamento/forma-pagamento.php">Forma de Pagamento</a>
                 </div>
             </div>
-            <a href="" class="link-animado">Analisar Vendas</a>
+            <a href="../funcionarios/analisar-vendas-funcionarios.php" class="link-animado">Analisar Vendas</a>
         </div>
     </div>
-    </div>
+
 
     <!-- TELA INICIAL DO ADMINISTRADOR, ONDE SERÁ POSSÍVEL VER OS FUNCIONÁRIOS CADASTRADOS E AS NOTIFICAÇÕES -->
     <div class="inicio">
@@ -112,7 +172,7 @@ if ($sql->rowCount() > 0) {
 
             <div class="lado-esquerdo">
 
-              <!-- TABELA COM ALGUMAS INFORMAÇÕES DOS PRODUTOS CADASTRADOS -->
+                <!-- TABELA COM ALGUMAS INFORMAÇÕES DOS PRODUTOS CADASTRADOS -->
                 <h3 class="title-tabela">Produtos Cadastrados</h3>
                 <div class="table-responsive">
                     <table class="table table-bordered">
@@ -328,4 +388,6 @@ if ($sql->rowCount() > 0) {
             </div>-->
     </div>
 
+    <!-- PARTE DO JAVASCRIPT -->
+    <script src="../js/script-adm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
