@@ -84,7 +84,7 @@ session_start();
 
     <!-- FORMULÁRIO ONDE UM USUÁRIO IRÁ COLOCAR AS INFORMAÇÕES DO ENDEREÇO ONDE RESIDE -->
     <div class="container-forms">
-        <form action="#" method="POST" class="form-cadastro-endereco">
+        <form action="../banco/cadastro-endereco.php" method="POST" class="form-cadastro-endereco">
             <h1 class="title-form">Cadastrar Endereço</h1>
             <p class="description-forms">
                 Agora precisamos das informações sobre o endereço onde saber onde será realizada a entrega do seu pedido
@@ -92,15 +92,15 @@ session_start();
 
             <!-- NOME DA RUA -->
             <h2 class="info-usuario">Nome da Rua</h2>
-            <input type="text" name="nomerua" class="input" id="rua" placeholder="Ex: Rua das Graças" autocomplete="off" required>
+            <input type="text" name="rua" class="input" id="rua" placeholder="Ex: Rua das Graças" autocomplete="off" required>
 
             <!-- DATA DO BAIRRO -->
             <h2 class="info-usuario">Nome do Bairro</h2>
-            <input type="text" name="nomebairro" class="input" id="bairro" placeholder="Ex: Bairro dos Leais" autocomplete="off" required>
+            <input type="text" name="bairro" class="input" id="bairro" placeholder="Ex: Bairro dos Leais" autocomplete="off" required>
 
             <!-- NOME DA CIDADE -->
             <h2 class="info-usuario">Nome da Cidade</h2>
-            <input type="text" name="nomecidade" class="input" id="cidade" placeholder="Ex: São Paulo" autocomplete="off" required>
+            <input type="text" name="cidade" class="input" id="cidade" placeholder="Ex: São Paulo" autocomplete="off" required>
 
             <!-- CEP -->
             <h2 class="info-usuario">CEP</h2>
@@ -129,7 +129,7 @@ session_start();
 
                     <input
                         type="number"
-                        name="numerocasa"
+                        name="casa"
                         class="input"
                         id="numero"
                         placeholder="Ex: 2"
