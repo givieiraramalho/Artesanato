@@ -7,9 +7,10 @@
     --color-texto: #2b2b2b;
     --color-sombra: #777;
     --color-borda: #e8e8e8;
-    --color-principal: #f07f0d;
-    --color-fundo: #fff5e9;
+    --color-principal: #ff8f1f;
+    --color-fundo: #ffd7af;
     --color-branco: #fff;
+    --color-footer: #3dbbb5;
 }
 
 /* RESET PRINCIPAL */
@@ -30,8 +31,9 @@ body {
     width: 100%;
     border-bottom: 1px solid var(--color-borda);
     position: sticky;
-    background: #fff;
     top: 0;
+    background: #fff;
+    z-index: 99999;
 }
 
 /* PRIMEIRO TOP-BAR / TOP-BAR DE CIMA */
@@ -41,7 +43,8 @@ body {
     justify-content: space-between;
     padding: 20px 35px;
     gap: 20px;
-    background-attachment: fixed;
+    position: relative;
+    z-index: 9999;
 }
 
 .top-bar a {
@@ -145,7 +148,6 @@ body {
     filter: invert(1);
 }
 
-/* PARTE DO CONTEÚDO DENTRO DO DROPDOWN */
 .conteudo-dropdown {
     display: none;
     position: absolute;
@@ -378,202 +380,245 @@ button a {
     color: #f07f0d;
 }
 
-/* RESPONSIVIDADE */
-/* NOTEBOOKS PEQUENOS */
-@media (max-width:1200px) {
+/* =========================================================
+   RESPONSIVIDADE DO HEADER
+   ========================================================= */
 
-    .form-login {
-        max-width: 420px;
+@media (max-width: 768px) {
+
+    /* HEADER */
+    .header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
     }
 
-}
-
-
-/* TABLETS */
-@media (max-width:992px) {
-
-    /* Header */
+    /* -----------------------------------------------------
+       PRIMEIRA LINHA
+       Logo + pesquisa + botão + login + carrinho
+       ----------------------------------------------------- */
 
     .top-bar {
-        flex-direction: column;
-        justify-content: center;
+        width: 100%;
+        padding: 10px;
+        gap: 8px;
+        display: flex;
         align-items: center;
-        gap: 20px;
-        padding: 20px;
+    }
+
+    /* LOGO */
+    .logo-link {
+        flex-shrink: 0;
+        cursor: pointer;
     }
 
     .img-logo {
-        width: 140px;
+        width: 75px;
+        height: auto;
+        display: block;
     }
+
+    /* -----------------------------------------------------
+       BARRA DE PESQUISA
+       ----------------------------------------------------- */
 
     .search {
-        width: 100%;
-    }
-
-    .search input {
-        max-width: none;
-    }
-
-    .actions {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .bottom-bar {
-        flex-wrap: wrap;
-        gap: 15px;
-        padding: 15px;
-    }
-
-    .bottom-bar a {
-        font-size: 14px;
-    }
-
-    /* Login */
-
-    .container-login {
-        padding: 25px;
-    }
-
-    .form-login {
-        max-width: 430px;
-        padding: 30px;
-    }
-
-}
-
-
-/* CELULARES */
-@media (max-width:768px) {
-
-    /* Header */
-
-    .top-bar {
-        flex-direction: column;
-        gap: 18px;
-        padding: 15px;
-    }
-
-    .img-logo {
-        width: 120px;
-    }
-
-    .search {
-        width: 100%;
-        flex-direction: column;
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        gap: 5px;
     }
 
     .search input {
         width: 100%;
-        max-width: none;
+        min-width: 0;
+        height: 38px;
+        padding: 8px 10px;
+        font-size: 13px;
+        border-radius: 8px;
     }
 
     .search-btn {
-        width: 100%;
-        height: 45px;
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        border-radius: 8px;
     }
+
+    .search-btn img {
+        width: 16px;
+    }
+
+    /* -----------------------------------------------------
+       LOGIN + CARRINHO
+       ----------------------------------------------------- */
 
     .actions {
-        width: 100%;
-        justify-content: center;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-shrink: 0;
     }
 
-    .bottom-bar {
-        flex-direction: column;
-        gap: 10px;
-        padding: 15px;
+    .actions button,
+    .button-dropdown {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
     }
 
-    .bottom-bar a {
-        width: 100%;
-        text-align: center;
+    .actions img {
+        width: 17px;
     }
 
-    /* Login */
-
-    .container-login {
-        padding: 15px;
+    .header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
     }
-
-    .form-login {
-        width: 100%;
-        max-width: 100%;
-        padding: 25px 20px;
-        border-radius: 18px;
-    }
-
-    .container-login img {
-        width: 80px;
-    }
-
-    .container-login h1 {
-        font-size: 1.5rem;
-    }
-
-    .container-login h2 {
-        font-size: 15px;
-    }
-
-    .input {
-        font-size: 15px;
-        padding: 12px;
-    }
-
-    .btn-submit {
-        width: 100%;
-        padding: 14px;
-        font-size: 16px;
-    }
-
-}
-
-/* CELULARES PEQUENOS */
-@media (max-width:480px) {
 
     .top-bar {
-        padding: 12px;
+        width: 100%;
+        padding: 10px;
+        gap: 8px;
+        display: flex;
+        align-items: center;
+    }
+
+
+    /* LOGO */
+    .logo-link {
+        display: block;
+        flex-shrink: 0;
+        cursor: pointer;
     }
 
     .img-logo {
-        width: 100px;
+        width: 75px;
+        height: auto;
+        display: block;
     }
 
+
+    /* PESQUISA */
+    .search {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .search input {
+        width: 100%;
+        min-width: 0;
+        height: 38px;
+        padding: 8px 10px;
+        font-size: 13px;
+        border-radius: 8px;
+    }
+
+    .search-btn {
+        width: 38px;
+        min-width: 38px;
+        height: 38px;
+        border-radius: 8px;
+    }
+
+
+    /* LOGIN E CARRINHO */
     .actions {
-        gap: 10px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-shrink: 0;
     }
 
-    .actions button {
-        width: 40px;
-        height: 40px;
+    .actions button,
+    .button-dropdown {
+        width: 38px;
+        min-width: 38px;
+        height: 38px;
+        border-radius: 8px;
     }
 
-    .container-login {
-        padding: 10px;
+
+    /* ==========================================
+       MENU MOBILE
+       ========================================== */
+    .bottom-bar {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        padding: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        background: var(--color-principal);
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        z-index: 9999;
     }
 
-    .form-login {
-        padding: 20px 15px;
-        border-radius: 15px;
+
+    /* MENU ABERTO */
+    .bottom-bar.menu-aberto {
+        display: flex;
     }
 
-    .container-login img {
-        width: 70px;
+
+    /* LINKS */
+    .bottom-bar>a,
+    .bottom-bar>.dropdown>a {
+        display: block;
+        width: 100%;
+        padding: 14px 20px;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    .container-login h1 {
-        font-size: 1.35rem;
+
+    /* DESATIVA A ANIMAÇÃO NO CELULAR */
+    .bottom-bar .link-animado::after {
+        display: none;
     }
 
-    .container-login h2 {
+
+    /* CATEGORIAS */
+    .dropdown {
+        width: 100%;
+        display: block;
+    }
+
+    .dropdown-menu {
+        position: static;
+        width: 100%;
+        min-width: 0;
+        transform: none;
+        display: none;
+        padding: 0;
+        background: white;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    /* CATEGORIAS ABERTA */
+    .dropdown.dropdown-aberto .dropdown-menu {
+        display: flex;
+    }
+
+    /* SUBLINKS */
+    .dropdown-menu a {
+        display: block;
+        width: 100%;
+        padding: 12px 35px;
+        color: var(--color-texto);
         font-size: 14px;
-    }
-
-    .input {
-        font-size: 14px;
-    }
-
-    .btn-submit {
-        font-size: 15px;
+        border-bottom: 1px solid var(--color-borda);
     }
 
 }
