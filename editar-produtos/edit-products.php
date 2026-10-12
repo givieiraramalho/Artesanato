@@ -63,9 +63,45 @@ $listaProdutos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <div class="header">
 
+        <!-- MENU LATERAL MOBILE -->
+        <div class="menu-mobile" id="menuMobile">
+            <div class="menu-mobile-conteudo">
+
+                <button class="fechar-menu" onclick="fecharMenu()">
+                    ✕
+                </button>
+
+                <a href="../admin/pagina-inicial-adm.php">Início</a>
+                <a href="../editar-produtos/edit-products.php">Editar Produtos</a>
+
+                <div class="menu-mobile-titulo">
+                    Cadastro
+                </div>
+
+                <a href="../cadastrar-produtos/cadastro-produtos.php">
+                    Produtos
+                </a>
+
+                <a href="../categorias/categorias.php">
+                    Categorias
+                </a>
+
+                <a href="../pagamento/forma-pagamento.php">
+                    Forma de Pagamento
+                </a>
+
+                <a href="../admin/analisar-vendas/analisar-vendas.php">Analisar Vendas</a>
+
+            </div>
+        </div>
+
         <!-- PARTE DE CIMA DO TOP BAR -->
         <div class="top-bar">
-            <a href=""><img src="../img/artes-removebg-preview.png" class="img-logo" alt="Logo"></a>
+            <a href="javascript:void(0)" onclick="abrirMenu()">
+                <img src="../img/artes-removebg-preview.png"
+                    class="img-logo"
+                    alt="Logo">
+            </a>
 
             <!-- BARRA DE PESQUISA -->
             <form method="POST" class="search">
@@ -81,7 +117,7 @@ $listaProdutos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </button>
             </form>
 
-             <!-- IMAGENS/BOTÕES DAS NOTIFICAÇÕES E DAS CONFIGURAÇÕES -->
+            <!-- IMAGENS/BOTÕES DAS NOTIFICAÇÕES E DAS CONFIGURAÇÕES -->
             <div class="actions">
                 <div class="dropdown-button">
                     <button class="button-dropdown">
@@ -96,9 +132,8 @@ $listaProdutos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <?php endif; ?>
                     </div>
                 </div>
-                
-                <button><a href=""><img src="../img/bell.svg" alt="Notificações"></a></button>
-                <button><img src="../img/gear.svg" alt="Configurações"></button>
+
+                <button><a href="#"><img src="../img/bell.svg" alt="Notificações"></a></button>
             </div>
         </div>
 
@@ -116,8 +151,7 @@ $listaProdutos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <a href="../funcionarios/cadastro-funcionario.php">Funcionários</a>
                 </div>
             </div>
-            <a href="" class="link-animado">Analisar Vendas</a>
-            <a href="" class="link-animado"></a>
+            <a href="../admin/analisar-vendas/analisar-vendas.php" class="link-animado">Analisar Vendas</a>
         </div>
     </div>
     </div>
@@ -252,6 +286,7 @@ $listaProdutos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
         <!--PARTE DO JAVASCRIPT-->
+        <script src="../js/script-adm.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 
