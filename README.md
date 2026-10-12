@@ -234,7 +234,7 @@ Projeto em desenvolvimento, com funcionalidades implementadas e aprimoramentos r
 
 Desenvolvido com foco na organização, na usabilidade e no gerenciamento das operações de uma loja virtual.
 
-Este sistema foi desenvolvido por **Giovanna Vieira Ramalho** para o Trabalho de Conclusão de Curso (TCC) do cursos de Desenvolvimento de Sistemas da Etec João Belarmino
+Este sistema foi desenvolvido por **Giovanna Vieira Ramalho** para o Trabalho de Conclusão de Curso (TCC) do curso de Desenvolvimento de Sistemas - Período da Tarde da Etec João Belarmino
 
 ---
 
