@@ -318,7 +318,7 @@ button a {
 /* ÁREA PRINCIPAL */
 .produto-detalhes {
     display: grid;
-    grid-template-columns: 45% 55%;
+    grid-template-columns: minmax(300px, 45%) minmax(300px, 55%);
     gap: 40px;
     padding: 20px 50px;
 }
@@ -728,6 +728,416 @@ footer .content-footer .link-boxes .boxes {
     line-height: 1.6;
     letter-spacing: 0.3px;
     opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+
+    /* HEADER */
+    .header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    /* -----------------------------------------------------
+       PRIMEIRA LINHA
+       Logo + pesquisa + botão + login + carrinho
+       ----------------------------------------------------- */
+
+    .top-bar {
+        width: 100%;
+        padding: 10px;
+        gap: 8px;
+        display: flex;
+        align-items: center;
+    }
+
+    /* LOGO */
+
+    .logo-link {
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+
+    .img-logo {
+        width: 75px;
+        height: auto;
+        display: block;
+    }
+
+    /* -----------------------------------------------------
+       BARRA DE PESQUISA
+       ----------------------------------------------------- */
+
+    .search {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        gap: 5px;
+    }
+
+    .search input {
+        width: 100%;
+        min-width: 0;
+        height: 38px;
+        padding: 8px 10px;
+        font-size: 13px;
+        border-radius: 8px;
+    }
+
+    .search-btn {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        border-radius: 8px;
+    }
+
+    .search-btn img {
+        width: 16px;
+    }
+
+    /* -----------------------------------------------------
+       LOGIN + CARRINHO
+       ----------------------------------------------------- */
+
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-shrink: 0;
+    }
+
+    .actions button,
+    .button-dropdown {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+    }
+
+    .actions img {
+        width: 17px;
+    }
+
+    .header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    .top-bar {
+        width: 100%;
+        padding: 10px;
+        gap: 8px;
+
+        display: flex;
+        align-items: center;
+    }
+
+
+    /* LOGO */
+    .logo-link {
+        display: block;
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+
+    .img-logo {
+        width: 75px;
+        height: auto;
+        display: block;
+    }
+
+
+    /* PESQUISA */
+    .search {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .search input {
+        width: 100%;
+        min-width: 0;
+        height: 38px;
+        padding: 8px 10px;
+        font-size: 13px;
+        border-radius: 8px;
+    }
+
+    .search-btn {
+        width: 38px;
+        min-width: 38px;
+        height: 38px;
+        border-radius: 8px;
+    }
+
+
+    /* LOGIN E CARRINHO */
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-shrink: 0;
+    }
+
+    .actions button,
+    .button-dropdown {
+        width: 38px;
+        min-width: 38px;
+        height: 38px;
+        border-radius: 8px;
+    }
+
+
+    /* ==========================================
+       MENU MOBILE
+       ========================================== */
+    .bottom-bar {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        padding: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        background: var(--color-principal);
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        z-index: 9999;
+    }
+
+
+    /* MENU ABERTO */
+    .bottom-bar.menu-aberto {
+        display: flex;
+    }
+
+
+    /* LINKS */
+    .bottom-bar>a,
+    .bottom-bar>.dropdown>a {
+        display: block;
+        width: 100%;
+        padding: 14px 20px;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+
+    /* DESATIVA A ANIMAÇÃO NO CELULAR */
+    .bottom-bar .link-animado::after {
+        display: none;
+    }
+
+
+    /* CATEGORIAS */
+    .dropdown {
+        width: 100%;
+        display: block;
+    }
+
+    .dropdown-menu {
+        position: static;
+        width: 100%;
+        min-width: 0;
+        transform: none;
+        display: none;
+        padding: 0;
+        background: white;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+
+    /* CATEGORIAS ABERTA */
+    .dropdown.dropdown-aberto .dropdown-menu {
+        display: flex;
+    }
+
+
+    /* SUBLINKS */
+    .dropdown-menu a {
+        display: block;
+        width: 100%;
+        padding: 12px 35px;
+        color: var(--color-texto);
+        font-size: 14px;
+        border-bottom: 1px solid var(--color-borda);
+    }
+}
+
+/* ===========================
+   TABLETS
+=========================== */
+@media (max-width: 992px) {
+
+    .produto-detalhes {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 20px 30px;
+    }
+
+    .produto-esquerda,
+    .produto-direita {
+        width: 100%;
+    }
+
+    .title-produto {
+        font-size: 32px;
+        text-align: center;
+    }
+
+    .imagem-container {
+        min-height: 350px;
+    }
+
+    .img-produto {
+        max-width: 350px;
+        max-height: 350px;
+    }
+
+    .produto-direita {
+        padding: 0;
+    }
+
+    .descricao-produto {
+        font-size: 24px;
+    }
+
+    .preco-produto {
+        font-size: 34px;
+    }
+
+}
+
+/* ===========================
+   CELULARES
+=========================== */
+@media (max-width: 768px) {
+
+    .content-produto {
+        padding: 20px 10px;
+    }
+
+    .card-produto {
+        border-radius: 10px;
+    }
+
+    .produto-detalhes {
+        padding: 15px;
+        gap: 25px;
+    }
+
+    .link-redirect {
+        margin: 15px;
+        font-size: 16px;
+    }
+
+    .title-produto {
+        font-size: 28px;
+        text-align: center;
+    }
+
+    .imagem-container {
+        min-height: 280px;
+    }
+
+    .img-produto {
+        max-width: 280px;
+        max-height: 280px;
+    }
+
+    .descricao-produto {
+        font-size: 22px;
+    }
+
+    .text-descricao-produto {
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    .preco-produto {
+        font-size: 30px;
+    }
+
+    .estoque-produto {
+        font-size: 15px;
+    }
+
+    .buttons-actions {
+        flex-direction: column;
+    }
+
+    .btn-add-cart,
+    .btn-comprar {
+        width: 100%;
+    }
+
+}
+
+/* ===========================
+   CELULARES PEQUENOS
+=========================== */
+@media (max-width: 480px) {
+
+    .content-produto {
+        padding: 10px 5px;
+    }
+
+    .card-produto {
+        border-radius: 8px;
+    }
+
+    .produto-detalhes {
+        padding: 10px;
+    }
+
+    .title-produto {
+        font-size: 24px;
+    }
+
+    .imagem-container {
+        min-height: 220px;
+    }
+
+    .img-produto {
+        max-width: 220px;
+        max-height: 220px;
+    }
+
+    .descricao-produto {
+        font-size: 20px;
+    }
+
+    .text-descricao-produto {
+        font-size: 14px;
+    }
+
+    .preco-produto {
+        font-size: 26px;
+    }
+
+    .btn-quantidade {
+        justify-content: center;
+    }
+
+    .quantidade-produto {
+        width: 30px;
+        font-size: 16px;
+    }
+
+    .diminuir-produto,
+    .aumentar-quantidade {
+        width: 35px;
+        height: 35px;
+    }
+
 }
 
 /* RESPONSIVIDADE DO FOOTER */

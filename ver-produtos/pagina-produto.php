@@ -27,6 +27,35 @@ if (!$produto) {
     die("Produto não encontrado.");
 }
 
+$categoria = filter_input(INPUT_GET, 'categoria', FILTER_VALIDATE_INT);
+
+$listaProdutos = [];
+
+if ($categoria && $categoria > 1) {
+
+    $sql = $pdo->prepare("
+        SELECT p.*
+        FROM produtos p
+        INNER JOIN produto_categoria pc
+            ON p.pk_id_produtos = pc.id_produto
+        WHERE p.status_produto = 1
+        AND pc.id_categoria = ?
+    ");
+
+    $sql->execute([$categoria]);
+} else {
+
+    $sql = $pdo->query("
+        SELECT *
+        FROM produtos
+        WHERE status_produto = 1
+    ");
+}
+
+if ($sql->rowCount() > 0) {
+    $listaProdutos = $sql->fetchAll(PDO::FETCH_ASSOC);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -44,14 +73,16 @@ if (!$produto) {
 </head>
 
 <body>
-
     <div class="header">
 
         <!-- PARTE DE CIMA DO TOP BAR -->
         <div class="top-bar">
-            <a href="">
+
+            <!-- LOGO -->
+            <a href="../pagina-inicial/inicio.php" class="logo-link" id="logo-menu">
                 <img src="../img/artes-removebg-preview.png" class="img-logo" alt="Logo">
             </a>
+
 
             <!-- BARRA DE PESQUISA -->
             <div class="search">
@@ -66,6 +97,7 @@ if (!$produto) {
             <div class="actions">
 
                 <div class="dropdown-button">
+
                     <button class="button-dropdown">
                         <img src="../img/person.svg" alt="Login">
                     </button>
@@ -73,35 +105,59 @@ if (!$produto) {
                     <div class="conteudo-dropdown">
                         <a href="../cadastro/cadastro.php">Cadastro</a>
                         <a href="../login/login.php">Login</a>
-                        <a href="#">Página do Usuário</a>
+
+                        <a href="../pagina-usuario/pagina-usuario.php">
+                            Página do Usuário
+                            <?= htmlspecialchars($_SESSION['user_nome'] ?? '') ?>
+                        </a>
+
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            <a href="../banco/logout-usuario.php">Sair</a>
+                        <?php endif; ?>
                     </div>
+
                 </div>
 
-                <!-- BOTÃO DO CARRINHO DE COMPRAS -->
+                <!-- CARRINHO -->
                 <a href="../carrinho-compras/carrinho-compras.php">
                     <button>
                         <img src="../img/cart3.svg" alt="Carrinho">
                     </button>
                 </a>
+
             </div>
+
         </div>
 
-        <!-- PARTE DE BAIXO DO TOP BAR COM OS LINKS DE NAVEGAÇÃO -->
-        <div class="bottom-bar">
-            <a href="../pagina-inicial/inicio.php" class="link-animado">Início</a>
-            <a href="../produtos/produtos.php" class="link-animado">Produtos</a>
+        <!-- MENU DE NAVEGAÇÃO -->
+        <div class="bottom-bar" id="menu-mobile">
+
+            <a href="../pagina-inicial/inicio.php" class="link-animado">
+                Início
+            </a>
+
+            <a href="../produtos/produtos.php" class="link-animado">
+                Produtos
+            </a>
+
             <div class="dropdown">
-                <a href="#" class="link-animado">Categorias</a>
+                <a href="#" class="link-animado" id="categorias-mobile">
+                    Categorias
+                </a>
 
                 <div class="dropdown-menu">
-                    <a href="#">Todos</a>
-                    <a href="#">Recomendados</a>
-                    <a href="#">Destaques</a>
-                    <a href="#">Promoções</a>
-                    <a href="#">Mais Vendidos</a>
+                    <a href="../produtos/produtos.php?categoria=1">Todos</a>
+                    <a href="../produtos/produtos.php?categoria=2">Recomendados</a>
+                    <a href="../produtos/produtos.php?categoria=3">Destaques</a>
+                    <a href="../produtos/produtos.php?categoria=4">Promoções</a>
+                    <a href="../produtos/produtos.php?categoria=5">Mais Vendidos</a>
                 </div>
             </div>
-            <a href="../sobre/sobre.php" class="link-animado">Sobre</a>
+
+            <a href="../sobre/sobre.php" class="link-animado">
+                Sobre
+            </a>
+
         </div>
     </div>
 
@@ -230,7 +286,7 @@ if (!$produto) {
                         <!-- BOTÃO COMPRAR AGORA -->
                         <a
                             class="btn-comprar"
-                            href="">
+                            href="../banco/verificar-compra-agora.php?id=<?= $produto['pk_id_produtos'] ?>">
                             Comprar Agora
                         </a>
 
@@ -324,7 +380,7 @@ if (!$produto) {
         atualizarQuantidade();
     </script>
 
-    <!-- PARTE FINAL DO SITE / FOOTER -->
+     <!-- PARTE FINAL DO SITE / FOOTER -->
     <footer>
         <div class="content-footer">
             <div class="top">
@@ -332,26 +388,27 @@ if (!$produto) {
                     <span class="logo_name">Artesanatos Eloi</span>
                 </div>
                 <div class="media-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-whatsapp"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/brinqdcorserranegra/"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://wa.me/5519995233724"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.instagram.com/brinqdcor?stkn=MXJsanliOWFnc215NA=="><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
             <div class="link-boxes">
                 <ul class="boxes">
                     <li class="link_name">Sobre a Empresa</li>
-                    <li><a href="#">Início</a></li>
-                    <li><a href="#">Contatos</a></li>
-                    <li><a href="#">Endereços</a></li>
-                    <li><a href="#">Nossa História</a></li>
+                    <li><a href="../pagina-inicial/inicio.php">Início</a></li>
+                    <li><a href="https://wa.me/5519995233724">Contatos</a></li>
+                    <li><a href="https://maps.app.goo.gl/QoNvQpyp3u9aoydS8">Endereços</a></li>
+                    <li><a href="../sobre/sobre.php">Nossa História</a></li>
                 </ul>
                 <div class="link-boxes">
                     <ul class="boxes">
                         <li class="link_name">Produtos</li>
-                        <li><a href="#">Início</a></li>
-                        <li><a href="#">Todos os Produtos</a></li>
-                        <li><a href="#">Novidades</a></li>
-                        <li><a href="#">Promoções</a></li>
+                        <li><a href="../produtos/produtos.php">Todos os Produtos</a></li>
+                        <li><a href="../produtos/produtos.php?categoria=2">Recomendados</a></li>
+                        <li><a href="../produtos/produtos.php?categoria=3">Destaques</a></li>
+                        <li><a href="../produtos/produtos.php?categoria=4">Promoções</a></li>
+                        <li><a href="../produtos/produtos.php?categoria=5">Mais Vendidos</a></li>
                     </ul>
                     <ul class="boxes input-box">
                         <li class="link_name">Inscreva-se</li>
@@ -363,14 +420,16 @@ if (!$produto) {
             <div class="bottom-details">
                 <div class="bottom_text">
                     <span class="copyright_text">
-                        Copyright &#169; 2026 - Artesanatos Eloi.
+                        Copyright &#169; 2026 - Artesanatos Eloi. <br>
                         Todos os Direitos Reservados
                     </span>
                 </div>
             </div>
     </footer>
 
+    <!-- SCRIPTS GERAIS -->
     <script src="script-produtos.js"></script>
+    <script src="../js/script-geral.js"></script>
 
 </body>
 
