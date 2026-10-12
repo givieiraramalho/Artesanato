@@ -268,6 +268,7 @@ button a {
     display: flex;
 }
 
+
 /* CARRINHO DE COMPRAS */
 .content-carrinho {
     display: flex;
@@ -348,6 +349,21 @@ button a {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* CHECKBOX DO PRODUTO */
+.selecionar-produto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+}
+
+/* Checkbox */
+.selecionar-produto input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
 }
 
 /* INFORMAÇÕES DO PRODUTO */
@@ -449,10 +465,11 @@ button a {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 30px;
+    gap: 35px;
     padding: 25px;
     background: #fff8ef;
     border-top: 1px solid #ddd;
+
 }
 
 /* TOTAL */
@@ -473,21 +490,66 @@ button a {
     color: #228b22;
 }
 
-/* BOTÃO CONTINUAR COMPRA */
-.btn-continuar {
-    display: inline-block;
+
+.selecionar-todos {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.selecionar-todos input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.selecionar-todos label {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* BOTÕES DO CARRINHO */
+
+.btn-continuar,
+.btn-produtos {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 190px;
+    min-height: 45px;
     padding: 12px 22px;
+    box-sizing: border-box;
+    border: none;
     border-radius: 7px;
-    background: #ff8f1f;
     color: #fff;
     text-decoration: none;
     font-weight: bold;
-    transition: .3s;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: .4s;
+}
+
+/* CONTINUAR COMPRA */
+.btn-continuar {
+    background: #ff8f1f;
 }
 
 .btn-continuar:hover {
-    background: #e8780d;
-    transform: translateY(-2px);
+    background: #cc6300;
+    color: #fff;
+}
+
+/* ADICIONAR MAIS PRODUTOS */
+.btn-produtos {
+    background: #011a36;
+}
+
+.btn-produtos:hover {
+    background: #ff8f1f;
+    color: #fff;
 }
 
 /* CARRINHO VAZIO */
@@ -692,63 +754,580 @@ footer .content-footer .link-boxes .boxes {
     opacity: 0.9;
 }
 
+/* RESPONSIVIDADE DO HEADER */
+@media (max-width: 768px) {
+
+    .header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    /* -----------------------------------------------------
+       PRIMEIRA LINHA
+       Logo + pesquisa + botão + login + carrinho
+       ----------------------------------------------------- */
+
+    .top-bar {
+        width: 100%;
+        padding: 10px;
+        gap: 8px;
+        display: flex;
+        align-items: center;
+    }
+
+    /* LOGO */
+
+    .logo-link {
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+
+    .img-logo {
+        width: 75px;
+        height: auto;
+        display: block;
+    }
+
+    /* -----------------------------------------------------
+       BARRA DE PESQUISA
+       ----------------------------------------------------- */
+
+    .search {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        gap: 5px;
+    }
+
+    .search input {
+        width: 100%;
+        min-width: 0;
+        height: 38px;
+        padding: 8px 10px;
+        font-size: 13px;
+        border-radius: 8px;
+    }
+
+    .search-btn {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        border-radius: 8px;
+    }
+
+    .search-btn img {
+        width: 16px;
+    }
+
+    /* -----------------------------------------------------
+       LOGIN + CARRINHO
+       ----------------------------------------------------- */
+
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-shrink: 0;
+    }
+
+    .actions button,
+    .button-dropdown {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+    }
+
+    .actions img {
+        width: 17px;
+    }
+
+    .header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    .top-bar {
+        width: 100%;
+        padding: 10px;
+        gap: 8px;
+        display: flex;
+        align-items: center;
+    }
+
+
+    /* LOGO */
+    .logo-link {
+        display: block;
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+
+    .img-logo {
+        width: 75px;
+        height: auto;
+        display: block;
+    }
+
+
+    /* PESQUISA */
+    .search {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .search input {
+        width: 100%;
+        min-width: 0;
+        height: 38px;
+        padding: 8px 10px;
+        font-size: 13px;
+        border-radius: 8px;
+    }
+
+    .search-btn {
+        width: 38px;
+        min-width: 38px;
+        height: 38px;
+        border-radius: 8px;
+    }
+
+
+    /* LOGIN E CARRINHO */
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-shrink: 0;
+    }
+
+    .actions button,
+    .button-dropdown {
+        width: 38px;
+        min-width: 38px;
+        height: 38px;
+        border-radius: 8px;
+    }
+
+
+    /* ==========================================
+       MENU MOBILE
+       ========================================== */
+
+    .bottom-bar {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        padding: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        background: var(--color-principal);
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        z-index: 9999;
+    }
+
+
+    /* MENU ABERTO */
+    .bottom-bar.menu-aberto {
+        display: flex;
+    }
+
+
+    /* LINKS */
+    .bottom-bar>a,
+    .bottom-bar>.dropdown>a {
+        display: block;
+        width: 100%;
+        padding: 14px 20px;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+
+    /* DESATIVA A ANIMAÇÃO NO CELULAR */
+    .bottom-bar .link-animado::after {
+        display: none;
+    }
+
+
+    /* CATEGORIAS */
+    .dropdown {
+        width: 100%;
+        display: block;
+    }
+
+    .dropdown-menu {
+        position: static;
+        width: 100%;
+        min-width: 0;
+        transform: none;
+        display: none;
+        padding: 0;
+        background: white;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+
+    /* CATEGORIAS ABERTA */
+    .dropdown.dropdown-aberto .dropdown-menu {
+        display: flex;
+    }
+
+
+    /* SUBLINKS */
+    .dropdown-menu a {
+        display: block;
+        width: 100%;
+        padding: 12px 35px;
+        color: var(--color-texto);
+        font-size: 14px;
+        border-bottom: 1px solid var(--color-borda);
+    }
+
+}
+
+
 /* RESPONSIVIDADE DO CARRINHO DE COMPRAS */
-@media (max-width: 700px) {
+/* ======================================================
+   RESPONSIVIDADE - DESKTOP, TABLET E CELULAR
+   ====================================================== */
+
+
+/* ======================================================
+   TELAS GRANDES
+   Acima de 1200px
+   ====================================================== */
+
+@media (min-width: 1200px) {
 
     .content-carrinho {
-        padding: 25px 10px;
+        padding: 50px 30px;
     }
 
     .card-carrinho {
-        border-radius: 10px;
+        max-width: 1100px;
+    }
+
+    .item-carrinho {
+        gap: 25px;
+    }
+
+}
+
+
+/* ======================================================
+   DESKTOP MENOR / TABLET GRANDE
+   769px até 1199px
+   ====================================================== */
+
+@media (min-width: 769px) and (max-width: 1199px) {
+
+    .content-carrinho {
+        padding: 40px 20px;
+    }
+
+    .card-carrinho {
+        max-width: 950px;
+    }
+
+    .card-content {
+        margin: 20px;
+    }
+
+    .item-carrinho {
+        gap: 15px;
+        padding: 18px 5px;
+    }
+
+    .imagem-produto-carrinho {
+        width: 90px;
+        height: 90px;
+    }
+
+    .selecionar-produto {
+        min-width: 35px;
+    }
+
+    .info-produto-carrinho {
+        min-width: 150px;
+    }
+
+    .subtotal-carrinho {
+        min-width: 100px;
+    }
+
+    .acao-carrinho {
+        min-width: 80px;
+    }
+
+}
+
+
+/* ======================================================
+   TABLET
+   577px até 768px
+   ====================================================== */
+
+@media (min-width: 577px) and (max-width: 768px) {
+
+    .content-carrinho {
+        padding: 30px 15px;
+    }
+
+    .card-carrinho {
+        border-radius: 12px;
     }
 
     .card-carrinho h1 {
-        font-size: 1.5rem;
+        font-size: 1.7rem;
+        padding: 18px;
+    }
+
+    .link-redirect {
+        margin: 18px 20px 5px;
+    }
+
+    .card-content {
+        margin: 15px 20px;
+    }
+
+    .selecionar-todos {
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+    }
+
+    .item-carrinho {
+
+        display: grid;
+
+        grid-template-columns: 35px 90px 1fr;
+
+        gap: 15px;
+
+        padding: 18px 5px;
+
+    }
+
+    .selecionar-produto {
+        min-width: auto;
+    }
+
+    .imagem-produto-carrinho {
+
+        width: 90px;
+        height: 90px;
+
+    }
+
+    .info-produto-carrinho {
+        min-width: 0;
+    }
+
+    .info-produto-carrinho h2 {
+        font-size: 1.05rem;
+    }
+
+    .preco-produto {
+        font-size: .95rem;
+    }
+
+    .subtotal-carrinho {
+
+        grid-column: 2 / 4;
+
+        min-width: auto;
+
+        text-align: left;
+
+        margin-top: 5px;
+
+    }
+
+    .acao-carrinho {
+
+        grid-column: 2 / 4;
+
+        min-width: auto;
+
+        text-align: left;
+
+    }
+
+    .resumo-carrinho {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 18px;
+
+        padding: 20px;
+
+    }
+
+    .total-carrinho {
+        align-items: flex-start;
+    }
+
+    .btn-continuar {
+
+        width: 100%;
+
+        text-align: center;
+
+    }
+
+}
+
+
+/* ======================================================
+   CELULAR
+   Até 576px
+   ====================================================== */
+
+@media (max-width: 576px) {
+
+    .content-carrinho {
+        padding: 20px 8px;
+    }
+
+    .card-carrinho {
+        width: 100%;
+        border-radius: 10px;
+        border-width: 1px;
+    }
+
+    .card-carrinho h1 {
+        font-size: 1.4rem;
+        padding: 15px 10px;
+    }
+
+    .link-redirect {
+        margin: 15px 15px 5px;
+        font-size: .9rem;
     }
 
     .card-content {
         margin: 15px;
     }
 
+    /* SELECIONAR TODOS */
+
+    .selecionar-todos {
+        gap: 7px;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+    }
+
+    .selecionar-todos input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+    }
+
+    .selecionar-todos label {
+        font-size: .9rem;
+    }
+
     /* ITEM DO CARRINHO */
+
     .item-carrinho {
         display: grid;
-        grid-template-columns: 80px 1fr;
-        gap: 15px;
-        padding: 20px 5px;
+        grid-template-columns: 30px 70px 1fr;
+        gap: 10px;
+        padding: 15px 0;
+    }
+
+    /* CHECKBOX */
+
+    .selecionar-produto {
+        min-width: auto;
+    }
+
+    .selecionar-produto input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
     }
 
     /* IMAGEM */
+
     .imagem-produto-carrinho {
-        width: 80px;
-        height: 80px;
-        grid-row: span 2;
+        width: 70px;
+        height: 70px;
+        border-radius: 8px;
     }
 
     /* INFORMAÇÕES */
+
     .info-produto-carrinho {
         min-width: 0;
     }
 
     .info-produto-carrinho h2 {
-        font-size: 1rem;
+        font-size: .95rem;
+        margin-bottom: 5px;
+        line-height: 1.2;
+    }
+
+    .preco-produto {
+        font-size: .85rem;
+        margin-bottom: 8px;
+    }
+
+    /* QUANTIDADE */
+    .quantidade-carrinho {
+        gap: 6px;
+    }
+
+    .quantidade-carrinho strong {
+        min-width: 20px;
+        font-size: .9rem;
+    }
+
+    .btn-quantidade {
+        width: 27px;
+        height: 27px;
+        font-size: 16px;
     }
 
     /* SUBTOTAL */
+
     .subtotal-carrinho {
-        align-items: flex-start;
-
-        text-align: left;
-
+        grid-column: 2 / 4;
         min-width: auto;
+        text-align: left;
+        margin-top: 5px;
+    }
+
+    .subtotal-carrinho span {
+        font-size: .75rem;
+    }
+
+    .subtotal-carrinho strong {
+        font-size: 1rem;
     }
 
     /* REMOVER */
+
     .acao-carrinho {
-        grid-column: 1 / -1;
-        text-align: left;
+        grid-column: 2 / 4;
         min-width: auto;
+        text-align: left;
+    }
+
+    .btn-remover {
+        padding: 7px 10px;
+        font-size: .8rem;
     }
 
     /* RESUMO */
@@ -756,18 +1335,85 @@ footer .content-footer .link-boxes .boxes {
         flex-direction: column;
         align-items: stretch;
         gap: 15px;
-        padding: 20px;
+        padding: 18px;
     }
+
+    /* TOTAL */
 
     .total-carrinho {
-        align-items: flex-end;
+        align-items: flex-start;
     }
 
-    .btn-continuar {
-        text-align: center;
-        width: 100%;
-        box-sizing: border-box;
+    .total-carrinho span {
+        font-size: .8rem;
     }
+
+    .total-carrinho strong {
+        font-size: 1.3rem;
+    }
+
+    /* CONTINUAR */
+
+    .btn-continuar {
+        width: 100%;
+        padding: 11px 15px;
+        text-align: center;
+        font-size: .9rem;
+
+    }
+
+}
+
+
+/* CELULARES MUITO PEQUENOS */
+
+@media (max-width: 380px) {
+
+    .content-carrinho {
+        padding: 15px 5px;
+    }
+
+    .card-content {
+        margin: 10px;
+    }
+
+    .card-carrinho h1 {
+        font-size: 1.25rem;
+    }
+
+    .item-carrinho {
+        grid-template-columns: 27px 60px 1fr;
+        gap: 8px;
+    }
+
+    .imagem-produto-carrinho {
+        width: 60px;
+        height: 60px;
+    }
+
+    .info-produto-carrinho h2 {
+        font-size: .88rem;
+    }
+
+    .preco-produto {
+        font-size: .8rem;
+    }
+
+    .btn-quantidade {
+        width: 25px;
+        height: 25px;
+        font-size: 14px;
+    }
+
+    .btn-remover {
+        padding: 6px 9px;
+        font-size: .75rem;
+    }
+
+    .total-carrinho strong {
+        font-size: 1.2rem;
+    }
+
 }
 
 /* RESPONSIVIDADE DO FOOTER */

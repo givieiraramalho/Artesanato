@@ -1,13 +1,162 @@
 <?php
+
+// ======================================================
+// INICIA A SESSÃO
+// ======================================================
+
 session_start();
+
+
+// ======================================================
+// CONEXÃO COM O BANCO DE DADOS
+// ======================================================
 
 require '../banco/config.php';
 
+
+// ======================================================
+// FUNÇÃO PARA SALVAR O CARRINHO NO BANCO
+// ======================================================
+
+function salvarCarrinhoBanco()
+{
+    global $pdo;
+
+    // Se o usuário não estiver logado,
+    // não temos como associar o carrinho a uma conta.
+    if (!isset($_SESSION['user_id'])) {
+        return;
+    }
+
+    // Se não existir carrinho na sessão,
+    // não há nada para salvar.
+    if (!isset($_SESSION['carrinho'])) {
+        return;
+    }
+
+    // ID do usuário logado
+    $id_usuario = $_SESSION['user_id'];
+
+    // Percorre todos os produtos que estão na sessão
+    foreach ($_SESSION['carrinho'] as $id_produto => $quantidade) {
+
+        // Verifica se esse produto já existe
+        // no carrinho desse usuário no banco
+        $sql = $pdo->prepare("
+            SELECT pk_id_carrinho
+            FROM carrinho
+            WHERE id_usuario = :id_usuario
+            AND id_produtos = :id_produto
+        ");
+
+        $sql->bindValue(
+            ':id_usuario',
+            $id_usuario,
+            PDO::PARAM_INT
+        );
+
+        $sql->bindValue(
+            ':id_produto',
+            $id_produto,
+            PDO::PARAM_INT
+        );
+
+        $sql->execute();
+
+        $item = $sql->fetch(PDO::FETCH_ASSOC);
+
+
+        // ==================================================
+        // PRODUTO JÁ EXISTE NO BANCO
+        // ==================================================
+
+        if ($item) {
+
+            $sql = $pdo->prepare("
+                UPDATE carrinho
+                SET quantidade = :quantidade
+                WHERE id_usuario = :id_usuario
+                AND id_produtos = :id_produto
+            ");
+
+            $sql->bindValue(
+                ':quantidade',
+                $quantidade,
+                PDO::PARAM_INT
+            );
+
+            $sql->bindValue(
+                ':id_usuario',
+                $id_usuario,
+                PDO::PARAM_INT
+            );
+
+            $sql->bindValue(
+                ':id_produto',
+                $id_produto,
+                PDO::PARAM_INT
+            );
+
+            $sql->execute();
+        }
+
+
+        // ==================================================
+        // PRODUTO AINDA NÃO EXISTE NO BANCO
+        // ==================================================
+
+        else {
+
+            $sql = $pdo->prepare("
+                INSERT INTO carrinho
+                (
+                    id_usuario,
+                    id_produtos,
+                    quantidade
+                )
+                VALUES
+                (
+                    :id_usuario,
+                    :id_produto,
+                    :quantidade
+                )
+            ");
+
+            $sql->bindValue(
+                ':id_usuario',
+                $id_usuario,
+                PDO::PARAM_INT
+            );
+
+            $sql->bindValue(
+                ':id_produto',
+                $id_produto,
+                PDO::PARAM_INT
+            );
+
+            $sql->bindValue(
+                ':quantidade',
+                $quantidade,
+                PDO::PARAM_INT
+            );
+
+            $sql->execute();
+        }
+    }
+}
+
+
+// ======================================================
+// ADICIONAR PRODUTO AO CARRINHO
+// ======================================================
+
 if (isset($_GET['adicionar'])) {
 
+    // ID do produto
     $id_produto = (int) $_GET['adicionar'];
 
-    // Quantidade escolhida na página do produto
+
+    // Quantidade escolhida
     $quantidade_adicionar = isset($_GET['quantidade'])
         ? (int) $_GET['quantidade']
         : 1;
@@ -15,25 +164,34 @@ if (isset($_GET['adicionar'])) {
 
     // Impede quantidade inválida
     if ($quantidade_adicionar < 1) {
-
         $quantidade_adicionar = 1;
-
     }
 
 
-    // Busca o produto
+    // --------------------------------------------------
+    // BUSCA O PRODUTO NO BANCO
+    // --------------------------------------------------
+
     $sql = $pdo->prepare("
         SELECT *
         FROM produtos
         WHERE pk_id_produtos = :id
     ");
 
-    $sql->bindValue(":id", $id_produto);
+    $sql->bindValue(
+        ':id',
+        $id_produto,
+        PDO::PARAM_INT
+    );
 
     $sql->execute();
 
     $produto = $sql->fetch(PDO::FETCH_ASSOC);
 
+
+    // --------------------------------------------------
+    // VERIFICA SE O PRODUTO EXISTE
+    // --------------------------------------------------
 
     if ($produto) {
 
@@ -51,72 +209,202 @@ if (isset($_GET['adicionar'])) {
             $quantidade_atual + $quantidade_adicionar;
 
 
-        // Verifica o estoque
+        // --------------------------------------------------
+        // VERIFICA O ESTOQUE
+        // --------------------------------------------------
+
         if ($nova_quantidade <= $estoque) {
 
+            // Salva na sessão
             $_SESSION['carrinho'][$id_produto] =
                 $nova_quantidade;
 
+
+            // Se estiver logado,
+            // salva também no banco
+            if (isset($_SESSION['user_id'])) {
+
+                salvarCarrinhoBanco();
+            }
         } else {
 
+            // Mensagem de estoque
             $_SESSION['aviso_estoque'] =
                 "A quantidade solicitada ultrapassa o estoque disponível.";
         }
     }
 
 
+    // Volta para o carrinho
     header("Location: carrinho-compras.php");
-
     exit;
 }
 
 
-/* Diminuir quantidade */
+// ======================================================
+// DIMINUIR QUANTIDADE
+// ======================================================
+
 if (isset($_GET['diminuir'])) {
 
-    $id_produto = $_GET['diminuir'];
+    $id_produto = (int) $_GET['diminuir'];
 
+
+    // Verifica se o produto está no carrinho
     if (isset($_SESSION['carrinho'][$id_produto])) {
 
+        // Diminui uma unidade
         $_SESSION['carrinho'][$id_produto]--;
 
-        // Se chegar a zero, remove do carrinho
+
+        // --------------------------------------------------
+        // SE CHEGAR A ZERO
+        // --------------------------------------------------
+
         if ($_SESSION['carrinho'][$id_produto] <= 0) {
 
+            // Remove da sessão
             unset($_SESSION['carrinho'][$id_produto]);
+
+
+            // Se estiver logado,
+            // remove também do banco
+            if (isset($_SESSION['user_id'])) {
+
+                $sql = $pdo->prepare("
+                    DELETE FROM carrinho
+                    WHERE id_usuario = :id_usuario
+                    AND id_produtos = :id_produto
+                ");
+
+                $sql->bindValue(
+                    ':id_usuario',
+                    $_SESSION['user_id'],
+                    PDO::PARAM_INT
+                );
+
+                $sql->bindValue(
+                    ':id_produto',
+                    $id_produto,
+                    PDO::PARAM_INT
+                );
+
+                $sql->execute();
+            }
+        }
+
+
+        // --------------------------------------------------
+        // AINDA POSSUI QUANTIDADE
+        // --------------------------------------------------
+
+        else {
+
+            // Atualiza a quantidade no banco
+            if (isset($_SESSION['user_id'])) {
+
+                $sql = $pdo->prepare("
+                    UPDATE carrinho
+                    SET quantidade = :quantidade
+                    WHERE id_usuario = :id_usuario
+                    AND id_produtos = :id_produto
+                ");
+
+                $sql->bindValue(
+                    ':quantidade',
+                    $_SESSION['carrinho'][$id_produto],
+                    PDO::PARAM_INT
+                );
+
+                $sql->bindValue(
+                    ':id_usuario',
+                    $_SESSION['user_id'],
+                    PDO::PARAM_INT
+                );
+
+                $sql->bindValue(
+                    ':id_produto',
+                    $id_produto,
+                    PDO::PARAM_INT
+                );
+
+                $sql->execute();
+            }
         }
     }
 
+
     header("Location: carrinho-compras.php");
     exit;
 }
 
-/* Remover produto */
+
+// ======================================================
+// REMOVER PRODUTO
+// ======================================================
+
 if (isset($_GET['remover'])) {
 
-    $id_produto = $_GET['remover'];
+    $id_produto = (int) $_GET['remover'];
 
+
+    // Remove da sessão
     if (isset($_SESSION['carrinho'][$id_produto])) {
 
         unset($_SESSION['carrinho'][$id_produto]);
     }
 
+
+    // Se estiver logado,
+    // remove também do banco
+    if (isset($_SESSION['user_id'])) {
+
+        $sql = $pdo->prepare("
+            DELETE FROM carrinho
+            WHERE id_usuario = :id_usuario
+            AND id_produtos = :id_produto
+        ");
+
+        $sql->bindValue(
+            ':id_usuario',
+            $_SESSION['user_id'],
+            PDO::PARAM_INT
+        );
+
+        $sql->bindValue(
+            ':id_produto',
+            $id_produto,
+            PDO::PARAM_INT
+        );
+
+        $sql->execute();
+    }
+
+
     header("Location: carrinho-compras.php");
     exit;
 }
 
 
-/* Mensagem de alerta do estoque */
+// ======================================================
+// MENSAGEM DE ALERTA DO ESTOQUE
+// ======================================================
+
 if (isset($_SESSION['aviso_estoque'])) {
 
-    echo "<script>
-        alert('" . addslashes($_SESSION['aviso_estoque']) . "');
-    </script>";
+    echo "
+    <script>
+        alert('" .
+        addslashes($_SESSION['aviso_estoque'])
+        . "');
+    </script>
+    ";
 
     unset($_SESSION['aviso_estoque']);
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -138,19 +426,27 @@ if (isset($_SESSION['aviso_estoque'])) {
 
         <!-- PARTE DE CIMA DO TOP BAR -->
         <div class="top-bar">
-            <a href=""><img src="../img/artes-removebg-preview.png" class="img-logo" alt="Logo"></a>
+
+            <!-- LOGO -->
+            <a href="../pagina-inicial/inicio.php" class="logo-link" id="logo-menu">
+                <img src="../img/artes-removebg-preview.png" class="img-logo" alt="Logo">
+            </a>
+
 
             <!-- BARRA DE PESQUISA -->
             <div class="search">
                 <input type="text" placeholder="Buscar produtos...">
+
                 <button class="search-btn">
-                    <img src="../img/search.svg" alt="Pesquisar"></button>
+                    <img src="../img/search.svg" alt="Pesquisar">
+                </button>
             </div>
 
             <!-- BOTÃO DE ENTRAR/CADASTRAR -->
             <div class="actions">
 
                 <div class="dropdown-button">
+
                     <button class="button-dropdown">
                         <img src="../img/person.svg" alt="Login">
                     </button>
@@ -158,37 +454,60 @@ if (isset($_SESSION['aviso_estoque'])) {
                     <div class="conteudo-dropdown">
                         <a href="../cadastro/cadastro.php">Cadastro</a>
                         <a href="../login/login.php">Login</a>
-                        <a href="#">Página do Usuário</a>
+
+                        <a href="../pagina-usuario/pagina-usuario.php">
+                            Página do Usuário
+                            <?= htmlspecialchars($_SESSION['user_nome'] ?? '') ?>
+                        </a>
+
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            <a href="../banco/logout-usuario.php">Sair</a>
+                        <?php endif; ?>
                     </div>
+
                 </div>
 
-                <!-- BOTÃO DO CARRINHO DE COMPRAS -->
+                <!-- CARRINHO -->
                 <a href="../carrinho-compras/carrinho-compras.php">
                     <button>
                         <img src="../img/cart3.svg" alt="Carrinho">
                     </button>
                 </a>
+
             </div>
+
         </div>
 
-        <!-- PARTE DE BAIXO DO TOP BAR COM OS LINKS DE NAVEGAÇÃO -->
-        <div class="bottom-bar">
-            <a href="../pagina-inicial/inicio.php" class="link-animado">Início</a>
-            <a href="../produtos/produtos.php" class="link-animado">Produtos</a>
+        <!-- MENU DE NAVEGAÇÃO -->
+        <div class="bottom-bar" id="menu-mobile">
+
+            <a href="../pagina-inicial/inicio.php" class="link-animado">
+                Início
+            </a>
+
+            <a href="../produtos/produtos.php" class="link-animado">
+                Produtos
+            </a>
+
             <div class="dropdown">
-                <a href="#" class="link-animado">Categorias</a>
+                <a href="#" class="link-animado" id="categorias-mobile">
+                    Categorias
+                </a>
 
                 <div class="dropdown-menu">
-                    <a href="#">Todos</a>
-                    <a href="#">Recomendados</a>
-                    <a href="#">Destaques</a>
-                    <a href="#">Promoções</a>
-                    <a href="#">Mais Vendidos</a>
+                    <a href="../produtos/produtos.php?categoria=1">Todos</a>
+                    <a href="../produtos/produtos.php?categoria=2">Recomendados</a>
+                    <a href="../produtos/produtos.php?categoria=3">Destaques</a>
+                    <a href="../produtos/produtos.php?categoria=4">Promoções</a>
+                    <a href="../produtos/produtos.php?categoria=5">Mais Vendidos</a>
                 </div>
             </div>
-            <a href="../sobre/sobre.php" class="link-animado">Sobre</a>
+
+            <a href="../sobre/sobre.php" class="link-animado">
+                Sobre
+            </a>
+
         </div>
-    </div>
     </div>
 
     <!-- CARRINHO DE COMPRAS -->
@@ -214,6 +533,16 @@ if (isset($_SESSION['aviso_estoque'])) {
             <?php else: ?>
 
                 <div class="card-content">
+
+                    <div class="selecionar-todos">
+                        <input
+                            type="checkbox"
+                            id="selecionar-todos">
+
+                        <label for="selecionar-todos">
+                            Selecionar todos
+                        </label>
+                    </div>
 
                     <?php
                     $total_da_compra = 0;
@@ -241,6 +570,15 @@ if (isset($_SESSION['aviso_estoque'])) {
 
                         <!-- PRODUTO DO CARRINHO -->
                         <div class="item-carrinho">
+
+                            <!-- SELECIONAR PRODUTO -->
+                            <div class="selecionar-produto">
+                                <input
+                                    type="checkbox"
+                                    name="produtos_selecionados[]"
+                                    value="<?= $produto['pk_id_produtos']; ?>"
+                                    data-subtotal="<?= $subtotal; ?>">
+                            </div>
 
                             <!-- IMAGEM -->
                             <div class="imagem-produto-carrinho">
@@ -334,7 +672,7 @@ if (isset($_SESSION['aviso_estoque'])) {
 
                         <span>Total da compra</span>
 
-                        <strong>
+                        <strong id="total-compra">
                             R$
                             <?php
                             echo number_format(
@@ -347,10 +685,18 @@ if (isset($_SESSION['aviso_estoque'])) {
                         </strong>
 
                     </div>
+                    
+                    <a href="../produtos/produtos.php" class="btn-produtos">Adicionar mais Produtos</a>
 
-                    <a class="btn-continuar" href="">
-                        Continuar Compra
-                    </a>
+                    <form id="formulario-continuar-compra" action="../banco/verificar-checkout.php" method="POST">
+
+                        <button
+                            type="submit"
+                            class="btn-continuar">
+                            Continuar Compra
+                        </button>
+
+                    </form>
 
                 </div>
 
@@ -367,26 +713,27 @@ if (isset($_SESSION['aviso_estoque'])) {
                     <span class="logo_name">Artesanatos Eloi</span>
                 </div>
                 <div class="media-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-whatsapp"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/brinqdcorserranegra/"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://wa.me/5519995233724"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.instagram.com/brinqdcor?stkn=MXJsanliOWFnc215NA=="><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
             <div class="link-boxes">
                 <ul class="boxes">
                     <li class="link_name">Sobre a Empresa</li>
-                    <li><a href="#">Início</a></li>
-                    <li><a href="#">Contatos</a></li>
-                    <li><a href="#">Endereços</a></li>
-                    <li><a href="#">Nossa História</a></li>
+                    <li><a href="../pagina-inicial/inicio.php">Início</a></li>
+                    <li><a href="https://wa.me/5519995233724">Contatos</a></li>
+                    <li><a href="https://maps.app.goo.gl/QoNvQpyp3u9aoydS8">Endereços</a></li>
+                    <li><a href="../sobre/sobre.php">Nossa História</a></li>
                 </ul>
                 <div class="link-boxes">
                     <ul class="boxes">
                         <li class="link_name">Produtos</li>
-                        <li><a href="#">Início</a></li>
-                        <li><a href="#">Todos os Produtos</a></li>
-                        <li><a href="#">Novidades</a></li>
-                        <li><a href="#">Promoções</a></li>
+                        <li><a href="../produtos/produtos.php">Todos os Produtos</a></li>
+                        <li><a href="../produtos/produtos.php?categoria=2">Recomendados</a></li>
+                        <li><a href="../produtos/produtos.php?categoria=3">Destaques</a></li>
+                        <li><a href="../produtos/produtos.php?categoria=4">Promoções</a></li>
+                        <li><a href="../produtos/produtos.php?categoria=5">Mais Vendidos</a></li>
                     </ul>
                     <ul class="boxes input-box">
                         <li class="link_name">Inscreva-se</li>
@@ -398,11 +745,201 @@ if (isset($_SESSION['aviso_estoque'])) {
             <div class="bottom-details">
                 <div class="bottom_text">
                     <span class="copyright_text">
-                        Copyright &#169; 2026 - Artesanatos Eloi.
+                        Copyright &#169; 2026 - Artesanatos Eloi. <br>
                         Todos os Direitos Reservados
                     </span>
                 </div>
             </div>
     </footer>
 
+    <script>
+        const checkboxes = document.querySelectorAll(
+            '.selecionar-produto input[type="checkbox"]'
+        );
+
+        const totalCompra = document.getElementById('total-compra');
+
+        const formularioCompra = document.getElementById(
+            'formulario-continuar-compra'
+        );
+
+        const selecionarTodos = document.getElementById(
+            'selecionar-todos'
+        );
+
+        // RECUPERANDO OS PRODUTOS SELECIONADOS
+
+        let produtosSelecionados = JSON.parse(
+            localStorage.getItem('produtosSelecionados')
+        ) || [];
+
+
+        // MARCANDO AS CHECKBOXES SALVAS
+
+        checkboxes.forEach(function(checkbox) {
+
+            if (produtosSelecionados.includes(checkbox.value)) {
+                checkbox.checked = true;
+            }
+
+        });
+
+        // ATUALIZA O TOTAL
+
+        function atualizarTotal() {
+
+            let total = 0;
+
+            checkboxes.forEach(function(checkbox) {
+
+                if (checkbox.checked) {
+
+                    total += parseFloat(
+                        checkbox.dataset.subtotal
+                    );
+
+                }
+
+            });
+
+
+            totalCompra.textContent = 'R$ ' + total.toLocaleString(
+                'pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            );
+        }
+
+        // SELECIONAR OU DESMARCAR TODOS
+
+        selecionarTodos.addEventListener('change', function() {
+
+            checkboxes.forEach(function(checkbox) {
+
+                checkbox.checked = selecionarTodos.checked;
+
+            });
+
+            // Atualiza a lista de produtos selecionados
+            produtosSelecionados = [];
+
+            checkboxes.forEach(function(checkbox) {
+
+                if (checkbox.checked) {
+                    produtosSelecionados.push(checkbox.value);
+                }
+
+            });
+
+            // Salva a seleção no navegador
+            localStorage.setItem(
+                'produtosSelecionados',
+                JSON.stringify(produtosSelecionados)
+            );
+
+            // Atualiza o total
+            atualizarTotal();
+
+        });
+
+        // QUANDO MARCAR/DESMARCAR
+
+        checkboxes.forEach(function(checkbox) {
+
+            checkbox.addEventListener('change', function() {
+
+                if (checkbox.checked) {
+
+                    if (!produtosSelecionados.includes(checkbox.value)) {
+                        produtosSelecionados.push(checkbox.value);
+                    }
+
+                } else {
+
+                    produtosSelecionados =
+                        produtosSelecionados.filter(function(id) {
+                            return id !== checkbox.value;
+                        });
+
+                }
+
+
+                // Salva a nova seleção
+                localStorage.setItem(
+                    'produtosSelecionados',
+                    JSON.stringify(produtosSelecionados)
+                );
+
+
+                // Atualiza o total
+                atualizarTotal();
+
+            });
+
+        });
+
+        // ATUALIZA O TOTAL AO ABRIR A PÁGINA
+
+        atualizarTotal();
+
+
+        // CONTINUAR COMPRA
+
+        formularioCompra.addEventListener('submit', function(event) {
+
+            event.preventDefault();
+
+            let selecionados = [];
+
+            checkboxes.forEach(function(checkbox) {
+
+                if (checkbox.checked) {
+                    selecionados.push(checkbox.value);
+                }
+
+            });
+
+
+            if (selecionados.length === 0) {
+
+                alert('Selecione pelo menos um produto para continuar.');
+
+                return;
+
+            }
+
+
+            // Remove campos antigos
+            document.querySelectorAll(
+                '.produto-selecionado-hidden'
+            ).forEach(function(campo) {
+                campo.remove();
+            });
+
+
+            // Cria os campos hidden
+            selecionados.forEach(function(idProduto) {
+
+                const campo = document.createElement('input');
+
+                campo.type = 'hidden';
+                campo.name = 'produtos_selecionados[]';
+                campo.value = idProduto;
+
+                campo.classList.add(
+                    'produto-selecionado-hidden'
+                );
+
+                formularioCompra.appendChild(campo);
+
+            });
+
+
+            formularioCompra.submit();
+
+        });
+    </script>
+
+    <script src="../js/script-geral.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
