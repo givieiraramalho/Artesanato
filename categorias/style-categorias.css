@@ -267,6 +267,52 @@ button a {
     display: block;
 }
 
+/* MENU MOBILE */
+.menu-mobile {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 280px;
+    height: 100vh;
+    background: white;
+    box-shadow: 5px 0 15px rgba(0,0,0,.15);
+    z-index: 9999;
+    transition: .3s;
+}
+
+.menu-mobile.ativo {
+    left: 0;
+}
+
+.menu-mobile-conteudo {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.menu-mobile-conteudo a {
+    text-decoration: none;
+    color: #2b2b2b;
+    padding: 12px 0;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.menu-mobile-titulo {
+    margin-top: 15px;
+    font-weight: bold;
+    color: var(--color-principal);
+}
+
+.fechar-menu {
+    border: none;
+    background: none;
+    font-size: 24px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+
 
 /* PARTE DO FORM DE CADASTRO DE CATEGORIAS */
 .container-categoria {
@@ -346,13 +392,9 @@ button a {
     );
 }
 
-/* =======================================================
-   RESPONSIVIDADE
-======================================================= */
+/* RESPONSIVIDADE */
 
-/* ===============================
-   NOTEBOOKS PEQUENOS
-================================*/
+/* Notebooks Pequenos */
 @media (max-width:1200px){
 
     .form-categoria{
@@ -362,255 +404,205 @@ button a {
 }
 
 
-/* ===============================
-   TABLETS
-================================*/
+/* TABLETS */
 @media (max-width:992px){
 
-    /* Header */
-
+    /* HEADER */
     .top-bar{
-
-        flex-direction:column;
-        justify-content:center;
+        display:flex;
+        flex-direction:row;
         align-items:center;
-        gap:20px;
-        padding:20px;
-
+        justify-content:space-between;
+        gap:15px;
+        padding:15px 20px;
     }
 
     .img-logo{
-
-        width:140px;
-
+        width:130px;
+        flex-shrink:0;
     }
 
     .search{
-
-        width:100%;
-
+        flex:1;
+        width:auto;
     }
 
     .search input{
-
+        width:100%;
         max-width:none;
-
     }
 
     .actions{
-
-        width:100%;
-        justify-content:center;
-
+        width:auto;
+        justify-content:flex-end;
+        flex-shrink:0;
     }
 
     .bottom-bar{
-
-        gap:15px;
-        padding:15px;
+        display:flex;
         flex-wrap:wrap;
-
+        justify-content:center;
+        gap:15px;
+        padding:12px;
     }
 
     .bottom-bar a{
-
         font-size:14px;
-
     }
 
-    /* Form */
+    /* FORM */
 
     .container-categoria{
-
-        padding:25px;
-
+        padding:20px;
     }
 
     .form-categoria{
-
         width:100%;
         max-width:430px;
-
     }
 
 }
 
 
-/* ===============================
-   CELULARES
-================================*/
+/* CELULARES */
 @media (max-width:768px){
 
-    /* Header */
+    /* ESCONDE OS LINKS */
+    .bottom-bar{
+        display:none;
+    }
+
+    /* HEADER */
 
     .top-bar{
-
-        flex-direction:column;
-        gap:18px;
-        padding:15px;
-
+        display:flex;
+        flex-direction:row;
+        align-items:center;
+        justify-content:space-between;
+        gap:8px;
+        padding:10px;
     }
 
     .img-logo{
-
-        width:120px;
-
+        width:70px;
+        cursor:pointer;
     }
 
     .search{
-
-        width:100%;
-        flex-direction:column;
-
+        flex:1;
+        display:flex;
+        flex-direction:row;
+        gap:5px;
     }
 
     .search input{
-
         width:100%;
         max-width:none;
-
     }
 
     .search-btn{
-
-        width:100%;
-        height:45px;
-
+        width:40px;
+        height:40px;
+        min-width:40px;
     }
 
     .actions{
-
-        width:100%;
+        width:auto;
+        display:flex;
         justify-content:center;
-
+        gap:5px;
     }
 
-    .bottom-bar{
-
-        flex-direction:column;
-        gap:10px;
-        padding:15px;
-
+    .actions button,
+    .button-dropdown{
+        width:40px;
+        height:40px;
     }
 
-    .bottom-bar a{
-
-        width:100%;
-        text-align:center;
-
+    .actions img{
+        width:15px;
     }
 
-    /* Cadastro */
+    /* FORM */
 
     .container-categoria{
-
-        padding:15px;
-
+        padding:10px;
     }
 
     .form-categoria{
-
         width:100%;
         max-width:100%;
-        padding:25px 20px;
-        border-radius:18px;
-
+        padding:20px 15px;
+        border-radius:15px;
     }
 
     .container-categoria h1{
-
-        font-size:1.5rem;
-
+        font-size:1.4rem;
     }
 
     .container-categoria h2{
-
-        font-size:15px;
-
+        font-size:14px;
     }
 
     .input{
-
+        font-size:14px;
         padding:12px;
-        font-size:15px;
-
     }
 
     .btn-submit{
-
         width:100%;
         padding:14px;
-
     }
 
 }
 
 
-/* ===============================
-   CELULARES PEQUENOS
-================================*/
+/* CELULARES PEQUENOS */
 @media (max-width:480px){
 
-    .top-bar{
-
-        padding:12px;
-
-    }
-
     .img-logo{
-
-        width:100px;
-
+        width:55px;
     }
 
-    .actions{
-
-        gap:10px;
-
+    .search input{
+        padding:8px;
+        font-size:12px;
     }
 
-    .actions button{
-
-        width:40px;
-        height:40px;
-
+    .search-btn{
+        width:35px;
+        height:35px;
+        min-width:35px;
     }
 
-    .container-categoria{
+    .actions button,
+    .button-dropdown{
+        width:35px;
+        height:35px;
+    }
 
-        padding:10px;
-
+    .actions img{
+        width:14px;
     }
 
     .form-categoria{
-
-        padding:20px 15px;
-        border-radius:15px;
-
+        padding:15px;
     }
 
     .container-categoria h1{
-
-        font-size:1.35rem;
-
+        font-size:1.2rem;
     }
 
     .container-categoria h2{
-
-        font-size:14px;
-
+        font-size:13px;
     }
 
     .input{
-
-        font-size:14px;
-
+        font-size:13px;
     }
 
     .btn-submit{
-
-        font-size:15px;
-
+        font-size:14px;
     }
 
 }
