@@ -171,12 +171,14 @@ Para que o projeto funcione da maneira adequada, é necessário colocar as suas 
 Segue abaixo recomendações de vídeo de como configurar as suas chaves de API corretamente
 
 **Chave de API - PHPMailer** - (https://youtu.be/Lz6fJChKRtA?si=BzB8N3WMzQ--rLd8) 
+
 **Chave de API - Stripe** - (https://youtu.be/7Z3Jz9VY0VU?si=N3wkObmM992P7S3y)
 
 ### 4.2. Aplicação das Chaves API
 Após criar corretamente as chaves API conforme os vídeos, elas devem ser colocadas corretamente nos determinados destinos
 
 **Chave de API - PHPMailer** - banco/mailer.php
+
 **Chave de API - Stripe** - finalizar-pagamento/checkout.php
 
 Após colocar as chaves API, faça um teste para ver se está funcionando corretamente.
