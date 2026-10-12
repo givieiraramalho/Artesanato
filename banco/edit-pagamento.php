@@ -83,7 +83,7 @@ if ($id) {
             <h1>Editar Forma de Pagamento</h1>
             <input type="hidden" name="id" value="<?= $pagamento['pk_id_pagamento'] ?>">
             <h2>Nome da Forma de Pagamento</h2>
-            <input type="text" name="namepagamento" id="namepagamento" class="input" value="<?= $pagamento['nome_pagamento'] ?>" required>
+            <input type="text" name="namepagamento" id="namepagamento" class="input" autocomplete="off" value="<?= $pagamento['nome_pagamento'] ?>" required>
             <br>
             <button type="submit" class="btn-submit">Editar</button>
 

@@ -24,6 +24,31 @@ if ($id) {
     }
 }
 
+// 1. Todas as categorias disponíveis
+$sqlListaCategorias = $pdo->prepare("
+    SELECT pk_id_categorias, nome_categoria
+    FROM categorias
+    ORDER BY nome_categoria
+");
+
+$sqlListaCategorias->execute();
+
+$listaCategorias = $sqlListaCategorias->fetchAll(PDO::FETCH_ASSOC);
+
+
+// 2. Categorias que pertencem ao produto
+$sqlCategorias = $pdo->prepare("
+    SELECT id_categoria
+    FROM produto_categoria
+    WHERE id_produto = :id
+");
+
+$sqlCategorias->bindValue(':id', $id, PDO::PARAM_INT);
+$sqlCategorias->execute();
+
+$categoriasDoProduto = $sqlCategorias->fetchAll(PDO::FETCH_COLUMN);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -122,6 +147,38 @@ if ($id) {
                     </div>
                 </div>
 
+                <div class="mb-3">
+                    <label class="form-label">Categorias</label>
+
+                    <div class="categorias-container">
+
+                        <?php foreach ($listaCategorias as $categoria): ?>
+
+                            <label
+                                class="categoria-item"
+                                for="cat<?= $categoria['pk_id_categorias'] ?>">
+
+                                <input
+                                    type="checkbox"
+                                    name="categorias[]"
+                                    value="<?= $categoria['pk_id_categorias'] ?>"
+                                    id="cat<?= $categoria['pk_id_categorias'] ?>"
+                                    <?= in_array(
+                                        $categoria['pk_id_categorias'],
+                                        $categoriasDoProduto
+                                    ) ? 'checked' : '' ?>>
+
+                                <?= htmlspecialchars($categoria['nome_categoria']) ?>
+
+                            </label>
+
+                        <?php endforeach; ?>
+
+                    </div>
+                </div>
+
+
+
             </div>
 
             <!-- SEÇÃO: PREÇO -->
@@ -149,19 +206,7 @@ if ($id) {
                 </div>
             </div>
 
-            <!-- SEÇÃO: DESCRIÇÃO -->
-            <div class="secao">
-
-                <h3>Descrição</h3>
-
-                <div class="campo">
-                    <label>Descrição do Produto</label>
-                    <textarea name="descricao"><?= htmlspecialchars($produtos['descricao']) ?></textarea>
-                </div>
-
-            </div>
-
-            <!-- SEÇÃO: IMAGEM -->
+             <!-- SEÇÃO: IMAGEM -->
             <div class="secao">
 
                 <h3>Imagem do Produto</h3>
@@ -173,14 +218,19 @@ if ($id) {
 
             </div>
 
-            <!-- SEÇÃO: DESCRIÇÃO -->
+            <!-- SEÇÃO: DESCRIÇÃO DO PRODUTO -->
             <div class="secao">
 
-                <h3>Descrição da Imagem (Opcional)</h3>
+                <h3>Descrição do Produto</h3>
 
                 <div class="campo">
-                    <label>Descrição da Imagem</label>
-                    <textarea name="descricao"><?= htmlspecialchars($produtos['descricao_imagem']) ?></textarea>
+                    <label for="descricao">Descrição do Produto</label>
+
+                    <textarea
+                        name="descricao"
+                        id="descricao"
+                        required><?= htmlspecialchars($produtos['descricao']) ?></textarea>
+
                 </div>
 
             </div>

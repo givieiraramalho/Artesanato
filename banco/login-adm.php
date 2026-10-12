@@ -14,12 +14,14 @@ $sql->execute();
 
 $user = $sql->fetch(PDO::FETCH_ASSOC);
 
-
-//Nesta parte, ele irá validar o login e irá verificar se está correto
+// Nesta parte, ele irá validar o login e irá verificar se está correto
 if ($user && password_verify($senha, $user['senha'])) {
 
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['user_nome'] = $user['nome'];
+
+    // IDENTIFICA QUE É UM ADMIN
+    $_SESSION['tipo_usuario'] = 'admin';
 
     echo "
     <script>
@@ -41,5 +43,4 @@ if ($user && password_verify($senha, $user['senha'])) {
 
     exit;
 }
-
 ?>

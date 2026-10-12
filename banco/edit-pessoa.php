@@ -1,0 +1,152 @@
+<?php
+
+require 'config.php';
+
+$pessoa = [];
+$id = filter_input(INPUT_GET, 'id');
+
+if ($id) {
+    $sql = $pdo->prepare("SELECT * FROM pessoa WHERE id_usuario = :id");
+    $sql->bindValue(':id', $id);
+    $sql->execute();
+
+    if ($sql->rowCount() > 0) {
+        $pessoa = $sql->fetch(PDO::FETCH_ASSOC);
+    } else {
+        echo "
+    <script>
+        alert('Não existe informações com o id indicado');
+        window.location.href = '../pagina-usuario/pagina-usuario.php';
+    </script>
+    ";
+
+        exit;
+    }
+} else {
+    header("Location: ../pagina-usuario/pagina-usuario.php");
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro Pessoa - Artesanatos Eloi</title>
+    <link rel="stylesheet" href="../pagina-forms-pessoa/style-forms-pessoa.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+
+    <div class="header">
+
+        <!-- PARTE DE CIMA DO TOP BAR -->
+        <div class="top-bar">
+            <a href="">
+                <img src="../img/artes-removebg-preview.png" class="img-logo" alt="Logo">
+            </a>
+
+            <!-- BARRA DE PESQUISA -->
+            <div class="search">
+                <input type="text" placeholder="Buscar produtos...">
+
+                <button class="search-btn">
+                    <img src="../img/search.svg" alt="Pesquisar">
+                </button>
+            </div>
+
+            <!-- BOTÃO DE ENTRAR/CADASTRAR -->
+            <div class="actions">
+
+                <div class="dropdown-button">
+                    <button class="button-dropdown">
+                        <img src="../img/person.svg" alt="Login">
+                    </button>
+
+                    <!-- CONTEÚDO DENTRO DO BOTÃO DE LOGIN -->
+                    <div class="conteudo-dropdown">
+                        <a href="../cadastro/cadastro.php">Cadastro</a>
+                        <a href="../login/login.php">Login</a>
+                        <a href="../pagina-usuario/pagina-usuario.php">Página do Usuário <?= htmlspecialchars($_SESSION['user_nome'] ?? '') ?></a>
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            <a href="../banco/logout-usuario.php">Sair</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- BOTÃO DO CARRINHO DE COMPRAS -->
+                <a href="../carrinho-compras/carrinho-compras.php">
+                    <button>
+                        <img src="../img/cart3.svg" alt="Carrinho">
+                    </button>
+                </a>
+            </div>
+        </div>
+
+        <!-- PARTE DE BAIXO DO TOP BAR COM OS LINKS DE NAVEGAÇÃO -->
+        <div class="bottom-bar">
+            <a href="../pagina-inicial/inicio.php" class="link-animado">Início</a>
+            <a href="../produtos/produtos.php" class="link-animado">Produtos</a>
+            <div class="dropdown">
+                <a href="#" class="link-animado">Categorias</a>
+
+                <div class="dropdown-menu">
+                    <a href="#">Todos</a>
+                    <a href="#">Recomendados</a>
+                    <a href="#">Destaques</a>
+                    <a href="#">Promoções</a>
+                    <a href="#">Mais Vendidos</a>
+                </div>
+            </div>
+            <a href="../sobre/sobre.php" class="link-animado">Sobre</a>
+        </div>
+    </div>
+
+
+    <!-- FORMULÁRIO ONDE UM USUÁRIO IRÁ COLOCAR ALGUMAS INFORMAÇÕES PESSOAIS DELE -->
+    <div class="container-forms">
+        <form action="../banco/edit-action-pessoa.php" method="POST" class="form-cadastro-pessoa">
+            <h1 class="title-form">Informações Pessoais</h1>
+            <p class="description-forms">
+                Antes de continuar a sua compra, precisamos coletar algumas informações pessoais
+            </p>
+
+            <!-- NOME DA PESSOA -->
+            <h2 class="info-usuario">Nome</h2>
+            <input type="hidden" name="id" value="<?= $pessoa["id_usuario"]; ?>">
+            <input type="text" name="nome" class="input" value="<?= $pessoa["nome"]; ?>" autocomplete="off" required>
+
+            <!-- DATA DE NASCIMENTO DA PESSOA -->
+            <h2 class="info-usuario">Data de Nascimento</h2>
+            <input type="date" id="dt_nasc" value="<?= $pessoa["dt_nasc"]; ?>" class="input" name="dt_nasc" required>
+
+            <!-- CPF DA PESSOA -->
+            <h2 class="info-usuario">CPF ou CNPJ</h2>
+            <input type="text" name="cpf" id="cpf" class="input" maxlength="14" value="<?= $pessoa["cpf"]; ?>" autocomplete="off"
+                required>
+
+            <!-- EMAIL DA PESSOA -->
+            <h2 class="info-usuario">Email</h2>
+            <input type="text" name="email" class="input" value="<?= $pessoa["email"]; ?>" autocomplete="off"
+                required>
+
+            <!-- TELEFONE DA PESSOA -->
+            <h2 class="info-usuario">Telefone</h2>
+            <input type="tel" name="telefone" id="telefone" class="input" maxlength="15" oninput="aplicarMascara(this)"
+                value="<?= $pessoa["telefone"]; ?>" autocomplete="off" required>
+
+            <!-- BOTÃO RESPONSÁVEL POR ENVIAR AS INFORMAÇÕES DO FORMULÁRIO -->
+            <button type="submit" class="btn-submit">
+                Continuar Cadastro
+            </button>
+        </form>
+    </div>
+
+    <script src="../pagina-forms-pessoa/script-forms.js"></script>

@@ -9,24 +9,30 @@ $sql = $pdo->prepare("INSERT INTO categorias (nome_categoria) VALUES (:namecateg
 $sql-> bindValue(':namecategoria', $nome);
 
 // Executando a inserção
-//caso o cadastro seja feito da maneira correta, irá exibir este alert falando que o cadastro foi realizado com sucesso
+// Caso o cadastro seja feito da maneira correta, irá exibir este alert falando que o cadastro foi realizado com sucesso
 if ($sql->execute()) {
+
+    // Verifica quem está logado para redirecionar corretamente
+    if ($_SESSION['tipo_usuario'] == 'admin') {
+        $destino = '../admin/pagina-inicial-adm.php';
+    } else {
+        $destino = '../funcionarios/pagina-inicial-func.php';
+    }
 
     echo "
     <script>
         alert('Cadastro da categoria realizado com sucesso!');
-        window.location.href = '../admin/pagina-inicial-adm.php';
+        window.location.href = '$destino';
     </script>
     ";
 
     exit;
-
-//caso de algum erro no cadastro, ele irá mostrar este outro alert
+    
 } else {
 
     echo "
     <script>
-        alert('Erro ao realizar o cadastro!');
+        alert('Erro ao realizar o cadastro da categoria!');
         window.history.back();
     </script>
     ";

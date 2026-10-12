@@ -82,7 +82,7 @@ if ($id) {
             <h1>Editar Categoria</h1>
             <input type="hidden" name="id" value="<?= $categoria['pk_id_categorias'] ?>">
             <h2>Nome da Categoria</h2>
-            <input type="text" name="namecategoria" id="namecategoria" class="input" value="<?= $categoria['nome_categoria'] ?>" required>
+            <input type="text" name="namecategoria" id="namecategoria" autocomplete="off" class="input" value="<?= $categoria['nome_categoria'] ?>" required>
             <br>
             <button type="submit" class="btn-submit">Atualizar Categoria</button>
 
