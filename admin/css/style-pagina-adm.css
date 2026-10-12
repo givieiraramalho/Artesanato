@@ -354,6 +354,51 @@ button a {
     text-decoration: none;
 }
 
+/* MENU MOBILE */
+.menu-mobile {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 280px;
+    height: 100vh;
+    background: white;
+    box-shadow: 5px 0 15px rgba(0,0,0,.15);
+    z-index: 9999;
+    transition: .3s;
+}
+
+.menu-mobile.ativo {
+    left: 0;
+}
+
+.menu-mobile-conteudo {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.menu-mobile-conteudo a {
+    text-decoration: none;
+    color: #2b2b2b;
+    padding: 12px 0;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.menu-mobile-titulo {
+    margin-top: 15px;
+    font-weight: bold;
+    color: var(--color-principal);
+}
+
+.fechar-menu {
+    border: none;
+    background: none;
+    font-size: 24px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    text-align: right;
+}
+
 /* TABELA DOS FUNCIONÁRIOS */
 .table {
     width: 60% !important;
@@ -364,6 +409,7 @@ button a {
 .title-tabela {
     margin: 10px;
     font-size: 1.6rem;
+    font-weight: bold;
     color: #000;
     text-align: center;
     margin-bottom: 15px;
@@ -490,7 +536,8 @@ thead th {
 }
 
 
-
+/* RESPONSIVIDADE */
+/* Notebooks */
 @media (max-width:1200px) {
 
     .conteudo-admin {
@@ -511,23 +558,25 @@ thead th {
 
 
 /* Tablets */
-@media (max-width:992px) {
+@media (max-width:850px) {
 
-    /* Top Bar */
     .top-bar {
-        flex-direction: column;
+        display: flex;
+        flex-direction: row;
         align-items: center;
-        justify-content: center;
-        gap: 20px;
-        padding: 20px;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 15px 20px;
     }
 
     .img-logo {
-        width: 140px;
+        width: 130px;
+        flex-shrink: 0;
     }
 
     .search {
-        width: 100%;
+        flex: 1;
+        display: flex;
         justify-content: center;
     }
 
@@ -537,38 +586,28 @@ thead th {
     }
 
     .actions {
-        width: 100%;
-        justify-content: center;
+        width: auto;
+        justify-content: flex-end;
+        flex-shrink: 0;
     }
 
-    /* Menu de navegação */
-
+    /* Mantém os links visíveis */
     .bottom-bar {
+        display: flex;
         flex-wrap: wrap;
+        justify-content: center;
         gap: 15px;
-        padding: 15px;
+        padding: 12px;
     }
 
     .bottom-bar a {
         font-size: 14px;
     }
 
-    /* Dashboard */
-
     .inicio {
         width: 95%;
         padding: 20px;
     }
-
-    .cabecalho-dashboard {
-        padding: 20px;
-    }
-
-    .title {
-        font-size: 2.3rem;
-    }
-
-    /* Cards */
 
     .menu-rapido {
         flex-direction: column;
@@ -577,30 +616,36 @@ thead th {
     .card-menu {
         width: 100%;
     }
-
 }
 
-/* RESPONSIVIDADE */
 /* Celulares */
 @media (max-width:768px) {
 
-    .inicio {
-        width: 98%;
-        padding: 15px;
-        margin: 15px auto;
+    /* ESCONDE MENU NORMAL */
+    .bottom-bar {
+        display: none;
     }
 
+    /* TOP BAR */
     .top-bar {
-        padding: 15px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 10px;
     }
 
     .img-logo {
-        width: 120px;
+        width: 70px;
+        cursor: pointer;
     }
 
     .search {
-        flex-direction: column;
-        width: 100%;
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
     }
 
     .search input {
@@ -609,44 +654,32 @@ thead th {
     }
 
     .search-btn {
-        width: 100%;
-        height: 45px;
+        width: 42px;
+        height: 42px;
+        flex-shrink: 0;
     }
 
     .actions {
+        width: auto;
         display: flex;
         justify-content: center;
+        gap: 8px;
     }
 
-    .bottom-bar {
-        flex-direction: column;
-        gap: 10px;
+    .actions button,
+    .button-dropdown {
+        width: 40px;
+        height: 40px;
     }
 
-    .bottom-bar a {
-        width: 100%;
-        text-align: center;
-    }
-
-    .cabecalho-dashboard {
+    .inicio {
+        width: 98%;
         padding: 15px;
-    }
-
-    .title {
-        font-size: 2rem;
-    }
-
-    .subtitulo {
-        font-size: 14px;
+        margin: 15px auto;
     }
 
     .menu-rapido {
-        gap: 15px;
-    }
-
-    .btn-cadastro {
-        padding: 12px;
-        font-size: 15px;
+        flex-direction: column;
     }
 
     .conteudo-admin {
@@ -658,84 +691,46 @@ thead th {
         width: 100%;
     }
 
-    .card-admin {
-        padding: 15px;
-    }
-
-    .title-tabela {
-        text-align: center;
-        font-size: 1.3rem;
-    }
-
-    /* Tabelas */
-
-    .table {
-        font-size: 14px;
-    }
-
     .table td,
     .table th {
         white-space: nowrap;
     }
-
-    .table td .btn {
-        display: block;
-        width: 100%;
-        margin-bottom: 5px;
-    }
-
-    /* Painel */
-
-    .panel-pendences {
-        width: 100%;
-    }
-
 }
 
 
 /* Celulares pequenos */
 @media (max-width:480px) {
 
-    .title {
-        font-size: 1.6rem;
-    }
-
-    .subtitulo {
-        font-size: 13px;
-    }
-
     .top-bar {
-        gap: 15px;
+        gap: 5px;
+        padding: 10px;
+    }
+
+    .img-logo {
+        width: 55px;
     }
 
     .actions {
-        gap: 10px;
+        gap: 5px;
     }
 
-    .actions button {
-        width: 40px;
-        height: 40px;
+    .actions button,
+    .button-dropdown {
+        width: 35px;
+        height: 35px;
+    }
+
+    .actions img {
+        width: 15px;
     }
 
     .search input {
-        padding: 10px;
+        padding: 8px;
+        font-size: 13px;
     }
 
     .search-btn {
-        height: 42px;
+        width: 35px;
+        height: 35px;
     }
-
-    .btn-cadastro {
-        font-size: 14px;
-        padding: 10px;
-    }
-
-    .title-tabela {
-        font-size: 1.2rem;
-    }
-
-    .table {
-        font-size: 12px;
-    }
-
 }
