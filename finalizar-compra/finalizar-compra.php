@@ -17,21 +17,32 @@ $produtosCarrinho = [];
 
 foreach ($_SESSION['carrinho'] as $id_produto => $quantidade) {
 
-    //Parte que regata os produtos que a pessoa colocou no carrinho
+    // Parte que resgata os produtos que a pessoa colocou no carrinho
     $sql = $pdo->prepare("SELECT * FROM produtos WHERE pk_id_produtos = ?");
-
     $sql->execute([$id_produto]);
-
     $produto = $sql->fetch(PDO::FETCH_ASSOC);
 
     if (!$produto) {
         continue;
     }
 
-    $subtotal = $produto['preco_produto'] * $quantidade;
+    // Cálculo do preço com desconto no checkout
+    $precoOriginal = (float) $produto['preco_produto'];
+    $porcentagemDesconto = (float) ($produto['desconto'] ?? 0);
+
+    if ($porcentagemDesconto > 0) {
+        $precoUnitario = $precoOriginal - ($precoOriginal * ($porcentagemDesconto / 100));
+    } else {
+        $precoUnitario = $precoOriginal;
+    }
+
+    // Calcula o subtotal usando o preço unitário correto (com ou sem desconto)
+    $subtotal = $precoUnitario * $quantidade;
 
     $totalCompra += $subtotal;
 
+    // Guarda os valores para exibir na tela
+    $produto['preco_unitario'] = $precoUnitario;
     $produto['quantidade'] = $quantidade;
     $produto['subtotal'] = $subtotal;
 
@@ -206,17 +217,19 @@ $pessoa = $sqlPessoa->fetch(PDO::FETCH_ASSOC);
                 Produtos
             </a>
 
+           <!-- Categorias -->
             <div class="dropdown">
                 <a href="#" class="link-animado" id="categorias-mobile">
                     Categorias
                 </a>
 
+                <!-- Filtro - Categorias dos Produtos -->
                 <div class="dropdown-menu">
                     <a href="../produtos/produtos.php?categoria=1">Todos</a>
                     <a href="../produtos/produtos.php?categoria=2">Recomendados</a>
-                    <a href="../produtos/produtos.php?categoria=3">Destaques</a>
-                    <a href="../produtos/produtos.php?categoria=4">Promoções</a>
-                    <a href="../produtos/produtos.php?categoria=5">Mais Vendidos</a>
+                    <a href="../produtos/produtos.php?categoria=3">Mais Vendidos</a>
+                    <a href="../produtos/produtos.php?categoria=4">Destaques</a>
+                    <a href="../produtos/produtos.php?categoria=5">Promoções</a>
                 </div>
             </div>
 
