@@ -1,23 +1,12 @@
 <?php
 
-// ======================================================
-// INICIA A SESSÃO
-// ======================================================
-
+// Iniciando a sessão
 session_start();
 
-
-// ======================================================
-// CONEXÃO COM O BANCO DE DADOS
-// ======================================================
-
+// Conexão com o banco de dados
 require '../banco/config.php';
 
-
-// ======================================================
-// FUNÇÃO PARA SALVAR O CARRINHO NO BANCO
-// ======================================================
-
+// Função para salvar o carrinho no banco
 function salvarCarrinhoBanco()
 {
     global $pdo;
@@ -65,11 +54,7 @@ function salvarCarrinhoBanco()
 
         $item = $sql->fetch(PDO::FETCH_ASSOC);
 
-
-        // ==================================================
-        // PRODUTO JÁ EXISTE NO BANCO
-        // ==================================================
-
+        // Produto já existe no banco
         if ($item) {
 
             $sql = $pdo->prepare("
@@ -100,13 +85,8 @@ function salvarCarrinhoBanco()
             $sql->execute();
         }
 
-
-        // ==================================================
-        // PRODUTO AINDA NÃO EXISTE NO BANCO
-        // ==================================================
-
+        // Produto ainda não existe no banco
         else {
-
             $sql = $pdo->prepare("
                 INSERT INTO carrinho
                 (
@@ -145,11 +125,7 @@ function salvarCarrinhoBanco()
     }
 }
 
-
-// ======================================================
-// ADICIONAR PRODUTO AO CARRINHO
-// ======================================================
-
+// Adicionar produto no carrinho
 if (isset($_GET['adicionar'])) {
 
     // ID do produto
@@ -167,11 +143,7 @@ if (isset($_GET['adicionar'])) {
         $quantidade_adicionar = 1;
     }
 
-
-    // --------------------------------------------------
-    // BUSCA O PRODUTO NO BANCO
-    // --------------------------------------------------
-
+    // Busca o produto no banco
     $sql = $pdo->prepare("
         SELECT *
         FROM produtos
@@ -188,11 +160,7 @@ if (isset($_GET['adicionar'])) {
 
     $produto = $sql->fetch(PDO::FETCH_ASSOC);
 
-
-    // --------------------------------------------------
-    // VERIFICA SE O PRODUTO EXISTE
-    // --------------------------------------------------
-
+    // Verifica se o produto existe
     if ($produto) {
 
         // Quantidade que já está no carrinho
@@ -209,10 +177,7 @@ if (isset($_GET['adicionar'])) {
             $quantidade_atual + $quantidade_adicionar;
 
 
-        // --------------------------------------------------
-        // VERIFICA O ESTOQUE
-        // --------------------------------------------------
-
+        // Verifica o estoque
         if ($nova_quantidade <= $estoque) {
 
             // Salva na sessão
@@ -240,11 +205,7 @@ if (isset($_GET['adicionar'])) {
     exit;
 }
 
-
-// ======================================================
-// DIMINUIR QUANTIDADE
-// ======================================================
-
+// Diminue quantidade
 if (isset($_GET['diminuir'])) {
 
     $id_produto = (int) $_GET['diminuir'];
@@ -257,10 +218,7 @@ if (isset($_GET['diminuir'])) {
         $_SESSION['carrinho'][$id_produto]--;
 
 
-        // --------------------------------------------------
-        // SE CHEGAR A ZERO
-        // --------------------------------------------------
-
+        // Se chegar ao zero
         if ($_SESSION['carrinho'][$id_produto] <= 0) {
 
             // Remove da sessão
@@ -293,11 +251,7 @@ if (isset($_GET['diminuir'])) {
             }
         }
 
-
-        // --------------------------------------------------
-        // AINDA POSSUI QUANTIDADE
-        // --------------------------------------------------
-
+        // Ainda possue quantidade
         else {
 
             // Atualiza a quantidade no banco
@@ -339,10 +293,7 @@ if (isset($_GET['diminuir'])) {
 }
 
 
-// ======================================================
-// REMOVER PRODUTO
-// ======================================================
-
+// Remove o produto
 if (isset($_GET['remover'])) {
 
     $id_produto = (int) $_GET['remover'];
@@ -385,11 +336,7 @@ if (isset($_GET['remover'])) {
     exit;
 }
 
-
-// ======================================================
-// MENSAGEM DE ALERTA DO ESTOQUE
-// ======================================================
-
+// Mensagem de alerta do estoque
 if (isset($_SESSION['aviso_estoque'])) {
 
     echo "
@@ -489,17 +436,19 @@ if (isset($_SESSION['aviso_estoque'])) {
                 Produtos
             </a>
 
+            <!-- Categorias -->
             <div class="dropdown">
                 <a href="#" class="link-animado" id="categorias-mobile">
                     Categorias
                 </a>
 
+                <!-- Filtro - Categorias dos Produtos -->
                 <div class="dropdown-menu">
                     <a href="../produtos/produtos.php?categoria=1">Todos</a>
                     <a href="../produtos/produtos.php?categoria=2">Recomendados</a>
-                    <a href="../produtos/produtos.php?categoria=3">Destaques</a>
-                    <a href="../produtos/produtos.php?categoria=4">Promoções</a>
-                    <a href="../produtos/produtos.php?categoria=5">Mais Vendidos</a>
+                    <a href="../produtos/produtos.php?categoria=3">Mais Vendidos</a>
+                    <a href="../produtos/produtos.php?categoria=4">Destaques</a>
+                    <a href="../produtos/produtos.php?categoria=5">Promoções</a>
                 </div>
             </div>
 
@@ -564,8 +513,21 @@ if (isset($_SESSION['aviso_estoque'])) {
                             continue;
                         }
 
-                        $subtotal = $produto['preco_produto'] * $quantidade;
+                        $precoOriginal = (float) $produto['preco_produto'];
+                        $porcentagemDesconto = (float) ($produto['desconto'] ?? 0);
+
+                        // Se houver desconto maior que zero, calcula o preço com desconto
+                        if ($porcentagemDesconto > 0) {
+                            $precoUnitario = $precoOriginal - ($precoOriginal * ($porcentagemDesconto / 100));
+                            $temDescontoItem = true;
+                        } else {
+                            $precoUnitario = $precoOriginal;
+                            $temDescontoItem = false;
+                        }
+
+                        $subtotal = $precoUnitario * $quantidade;
                         $total_da_compra += $subtotal;
+
                     ?>
 
                         <!-- PRODUTO DO CARRINHO -->
@@ -595,15 +557,19 @@ if (isset($_SESSION['aviso_estoque'])) {
                                 </h2>
 
                                 <p class="preco-produto">
-                                    R$
-                                    <?php
-                                    echo number_format(
-                                        $produto['preco_produto'],
-                                        2,
-                                        ',',
-                                        '.'
-                                    );
-                                    ?>
+                                    <?php if ($temDescontoItem): ?>
+                                        <span style="text-decoration: line-through; color: #888; font-size: 0.85em;">
+                                            R$ <?= number_format($precoOriginal, 2, ',', '.') ?>
+                                        </span><br>
+                                        <span style="color: #d9534f; font-weight: bold;">
+                                            R$ <?= number_format($precoUnitario, 2, ',', '.') ?>
+                                        </span>
+                                        <span style="background: #ff4757; color: #fff; padding: 2px 5px; border-radius: 3px; font-size: 0.75em;">
+                                            <?= number_format($porcentagemDesconto, 0) ?>% OFF
+                                        </span>
+                                    <?php else: ?>
+                                        R$ <?= number_format($precoOriginal, 2, ',', '.') ?>
+                                    <?php endif; ?>
                                 </p>
 
                                 <!-- QUANTIDADE -->
@@ -685,7 +651,7 @@ if (isset($_SESSION['aviso_estoque'])) {
                         </strong>
 
                     </div>
-                    
+
                     <a href="../produtos/produtos.php" class="btn-produtos">Adicionar mais Produtos</a>
 
                     <form id="formulario-continuar-compra" action="../banco/verificar-checkout.php" method="POST">
@@ -756,26 +722,21 @@ if (isset($_SESSION['aviso_estoque'])) {
         const checkboxes = document.querySelectorAll(
             '.selecionar-produto input[type="checkbox"]'
         );
-
         const totalCompra = document.getElementById('total-compra');
-
         const formularioCompra = document.getElementById(
             'formulario-continuar-compra'
         );
-
         const selecionarTodos = document.getElementById(
             'selecionar-todos'
         );
 
-        // RECUPERANDO OS PRODUTOS SELECIONADOS
-
+        // Recuperando os produtos selecionados
         let produtosSelecionados = JSON.parse(
             localStorage.getItem('produtosSelecionados')
         ) || [];
 
 
-        // MARCANDO AS CHECKBOXES SALVAS
-
+        // Marcando as checkbox salvas
         checkboxes.forEach(function(checkbox) {
 
             if (produtosSelecionados.includes(checkbox.value)) {
@@ -784,8 +745,7 @@ if (isset($_SESSION['aviso_estoque'])) {
 
         });
 
-        // ATUALIZA O TOTAL
-
+        //Atualiza o total
         function atualizarTotal() {
 
             let total = 0;
@@ -797,11 +757,8 @@ if (isset($_SESSION['aviso_estoque'])) {
                     total += parseFloat(
                         checkbox.dataset.subtotal
                     );
-
                 }
-
             });
-
 
             totalCompra.textContent = 'R$ ' + total.toLocaleString(
                 'pt-BR', {
@@ -811,8 +768,7 @@ if (isset($_SESSION['aviso_estoque'])) {
             );
         }
 
-        // SELECIONAR OU DESMARCAR TODOS
-
+        // Seleciona ou desmarca todos os produtos
         selecionarTodos.addEventListener('change', function() {
 
             checkboxes.forEach(function(checkbox) {
@@ -843,20 +799,16 @@ if (isset($_SESSION['aviso_estoque'])) {
 
         });
 
-        // QUANDO MARCAR/DESMARCAR
-
+        // Quando marca/desmarca
         checkboxes.forEach(function(checkbox) {
-
             checkbox.addEventListener('change', function() {
 
                 if (checkbox.checked) {
-
                     if (!produtosSelecionados.includes(checkbox.value)) {
                         produtosSelecionados.push(checkbox.value);
                     }
 
                 } else {
-
                     produtosSelecionados =
                         produtosSelecionados.filter(function(id) {
                             return id !== checkbox.value;
@@ -879,13 +831,11 @@ if (isset($_SESSION['aviso_estoque'])) {
 
         });
 
-        // ATUALIZA O TOTAL AO ABRIR A PÁGINA
-
+        // Atualiza o total ao carregar a página
         atualizarTotal();
 
 
-        // CONTINUAR COMPRA
-
+        // Continuar Compra
         formularioCompra.addEventListener('submit', function(event) {
 
             event.preventDefault();
@@ -900,15 +850,10 @@ if (isset($_SESSION['aviso_estoque'])) {
 
             });
 
-
             if (selecionados.length === 0) {
-
                 alert('Selecione pelo menos um produto para continuar.');
-
                 return;
-
             }
-
 
             // Remove campos antigos
             document.querySelectorAll(
@@ -920,13 +865,11 @@ if (isset($_SESSION['aviso_estoque'])) {
 
             // Cria os campos hidden
             selecionados.forEach(function(idProduto) {
-
                 const campo = document.createElement('input');
 
                 campo.type = 'hidden';
                 campo.name = 'produtos_selecionados[]';
                 campo.value = idProduto;
-
                 campo.classList.add(
                     'produto-selecionado-hidden'
                 );
@@ -934,7 +877,6 @@ if (isset($_SESSION['aviso_estoque'])) {
                 formularioCompra.appendChild(campo);
 
             });
-
 
             formularioCompra.submit();
 
