@@ -155,17 +155,19 @@ if (isset($_SESSION['user_id'])) {
                 Produtos
             </a>
 
+            <!-- Categorias -->
             <div class="dropdown">
                 <a href="#" class="link-animado" id="categorias-mobile">
                     Categorias
                 </a>
 
+                <!-- Filtro - Categorias dos Produtos -->
                 <div class="dropdown-menu">
                     <a href="../produtos/produtos.php?categoria=1">Todos</a>
                     <a href="../produtos/produtos.php?categoria=2">Recomendados</a>
-                    <a href="../produtos/produtos.php?categoria=3">Destaques</a>
-                    <a href="../produtos/produtos.php?categoria=4">Promoções</a>
-                    <a href="../produtos/produtos.php?categoria=5">Mais Vendidos</a>
+                    <a href="../produtos/produtos.php?categoria=3">Mais Vendidos</a>
+                    <a href="../produtos/produtos.php?categoria=4">Destaques</a>
+                    <a href="../produtos/produtos.php?categoria=5">Promoções</a>
                 </div>
             </div>
 
@@ -176,127 +178,155 @@ if (isset($_SESSION['user_id'])) {
         </div>
     </div>
 
-  <!-- CONTEÚDO DA PÁGINA DO USUÁRIO -->
-<main class="pagina-usuario">
-<?php if (!isset($_SESSION['user_id'])): ?>
-    <section class="estado-conta">
-        <span class="icone-estado"><i class="fa-regular fa-user"></i></span>
-        <h1>Entre na sua conta</h1>
-        <p>Faça login para consultar suas informações e acompanhar seus pedidos.</p>
-        <a href="../login/login.php" class="btn-primario-conta">Fazer login</a>
-    </section>
-<?php else: ?>
-    <div class="painel-conta">
-        <header class="topo-conta">
-            <div>
-                <span class="sobretitulo-conta">ÁREA DO CLIENTE</span>
-                <h1>Olá, <?= htmlspecialchars($_SESSION['user_nome']) ?>!</h1>
-                <p>Gerencie seus dados e acompanhe suas compras em um só lugar.</p>
-            </div>
-            <a href="../banco/logout-usuario.php" class="btn-sair-conta"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair da conta</a>
-        </header>
-
-        <?php if (!$pessoa || !$endereco): ?>
-            <section class="aviso-cadastro-conta">
-                <div class="aviso-icone"><i class="fa-solid fa-clipboard-list"></i></div>
-                <div class="aviso-texto">
-                    <h2>Complete seu cadastro</h2>
-                    <p>Cadastre suas informações pessoais e seu endereço para facilitar suas próximas compras.</p>
-                </div>
-                <a href="../pagina-forms-pessoa/forms-info-pessoais.php" class="btn-primario-conta">Cadastrar informações</a>
+    <!-- CONTEÚDO DA PÁGINA DO USUÁRIO -->
+    <main class="pagina-usuario">
+        <?php if (!isset($_SESSION['user_id'])): ?>
+            <section class="estado-conta">
+                <span class="icone-estado"><i class="fa-regular fa-user"></i></span>
+                <h1>Entre na sua conta</h1>
+                <p>Faça login para consultar suas informações e acompanhar seus pedidos.</p>
+                <a href="../login/login.php" class="btn-primario-conta">Fazer login</a>
             </section>
         <?php else: ?>
-            <section class="grade-informacoes-conta" aria-label="Dados da conta">
-                <article class="painel-info-conta">
-                    <div class="titulo-painel-info">
-                        <span class="icone-painel-info"><i class="fa-regular fa-id-card"></i></span>
-                        <div><h2>Dados pessoais</h2><p>Informações da sua conta</p></div>
+            <div class="painel-conta">
+                <header class="topo-conta">
+                    <div>
+                        <span class="sobretitulo-conta">ÁREA DO CLIENTE</span>
+                        <h1>Olá, <?= htmlspecialchars($_SESSION['user_nome']) ?>!</h1>
+                        <p>Gerencie seus dados e acompanhe suas compras em um só lugar.</p>
                     </div>
-                    <dl class="lista-dados-conta">
-                        <div><dt>Nome completo</dt><dd><?= htmlspecialchars($pessoa['nome']) ?></dd></div>
-                        <div><dt>CPF</dt><dd><?= htmlspecialchars($pessoa['cpf']) ?></dd></div>
-                        <div><dt>Nascimento</dt><dd><?= htmlspecialchars($pessoa['dt_nasc']) ?></dd></div>
-                        <div><dt>E-mail</dt><dd><?= htmlspecialchars($pessoa['email']) ?></dd></div>
-                        <div><dt>Telefone</dt><dd><?= htmlspecialchars($pessoa['telefone']) ?></dd></div>
-                    </dl>
-                    <a href="../banco/edit-pessoa.php?id=<?= (int) $_SESSION['user_id'] ?>" class="btn-secundario-conta"><i class="fa-solid fa-pen"></i> Editar dados</a>
-                </article>
+                    <a href="../banco/logout-usuario.php" class="btn-sair-conta"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair da conta</a>
+                </header>
 
-                <article class="painel-info-conta">
-                    <div class="titulo-painel-info">
-                        <span class="icone-painel-info"><i class="fa-solid fa-location-dot"></i></span>
-                        <div><h2>Endereço de entrega</h2><p>Local para receber suas compras</p></div>
-                    </div>
-                    <dl class="lista-dados-conta">
-                        <div><dt>Rua</dt><dd><?= htmlspecialchars($endereco['nome_rua']) ?>, <?= htmlspecialchars($endereco['numero_casa']) ?></dd></div>
-                        <div><dt>Bairro</dt><dd><?= htmlspecialchars($endereco['nome_bairro']) ?></dd></div>
-                        <div><dt>Cidade / Estado</dt><dd><?= htmlspecialchars($endereco['cidade']) ?> - <?= htmlspecialchars($endereco['estado']) ?></dd></div>
-                        <div><dt>CEP</dt><dd><?= htmlspecialchars($endereco['cep']) ?></dd></div>
-                        <?php if (!empty($endereco['apartamento'])): ?><div><dt>Complemento</dt><dd><?= htmlspecialchars($endereco['apartamento']) ?></dd></div><?php endif; ?>
-                        <?php if (!empty($endereco['referencia'])): ?><div><dt>Referência</dt><dd><?= htmlspecialchars($endereco['referencia']) ?></dd></div><?php endif; ?>
-                    </dl>
-                    <a href="../banco/edit-endereco.php?id=<?= (int) $_SESSION['user_id'] ?>" class="btn-secundario-conta"><i class="fa-solid fa-pen"></i> Editar endereço</a>
-                </article>
-            </section>
-        <?php endif; ?>
-
-        <section class="area-pedidos-conta">
-            <div class="cabecalho-pedidos-conta">
-                <div><span class="sobretitulo-conta">HISTÓRICO</span><h2>Meus pedidos</h2><p>Consulte suas compras e os valores de cada pedido.</p></div>
-                <a href="../produtos/produtos.php" class="link-continuar-comprando">Continuar comprando <i class="fa-solid fa-arrow-right"></i></a>
-            </div>
-
-            <?php if (empty($pedidos)): ?>
-                <div class="sem-pedidos-conta"><i class="fa-solid fa-box-open"></i><h3>Você ainda não fez pedidos</h3><p>Quando você realizar uma compra, ela aparecerá aqui.</p><a href="../produtos/produtos.php" class="btn-primario-conta">Explorar produtos</a></div>
-            <?php else: ?>
-                <div class="grade-pedidos-conta">
-                    <?php foreach ($pedidos as $pedido): ?>
-                        <?php
-                        $sqlItens = $pdo->prepare("SELECT pr.nome_produto, ip.quantidade, ip.preco_unitario, ip.subtotal FROM itens_pedido ip INNER JOIN produtos pr ON pr.pk_id_produtos = ip.fk_id_produtos WHERE ip.fk_id_pedidos = ?");
-                        $sqlItens->execute([$pedido['pk_id_pedidos']]);
-                        $itens = $sqlItens->fetchAll(PDO::FETCH_ASSOC);
-                        ?>
-                        <article class="pedido-conta-card">
-                            <div class="pedido-conta-topo">
-                                <div><span class="pedido-label">PEDIDO</span><h3>#<?= (int) $pedido['pk_id_pedidos'] ?></h3><p><i class="fa-regular fa-calendar"></i> <?= date('d/m/Y H:i', strtotime($pedido['dt_pedido'])) ?></p></div>
-                                <span class="status-pedido-conta"><?= htmlspecialchars($pedido['status_pedido']) ?></span>
+                <?php if (!$pessoa || !$endereco): ?>
+                    <section class="aviso-cadastro-conta">
+                        <div class="aviso-icone"><i class="fa-solid fa-clipboard-list"></i></div>
+                        <div class="aviso-texto">
+                            <h2>Complete seu cadastro</h2>
+                            <p>Cadastre suas informações pessoais e seu endereço para facilitar suas próximas compras.</p>
+                        </div>
+                        <a href="../pagina-forms-pessoa/forms-info-pessoais.php" class="btn-primario-conta">Cadastrar informações</a>
+                    </section>
+                <?php else: ?>
+                    <section class="grade-informacoes-conta" aria-label="Dados da conta">
+                        <article class="painel-info-conta">
+                            <div class="titulo-painel-info">
+                                <span class="icone-painel-info"><i class="fa-regular fa-id-card"></i></span>
+                                <div>
+                                    <h2>Dados pessoais</h2>
+                                    <p>Informações da sua conta</p>
+                                </div>
                             </div>
-                            <div class="pedido-conta-itens">
-                                <?php foreach ($itens as $item): ?>
-                                    <div class="linha-item-conta"><div><strong><?= htmlspecialchars($item['nome_produto']) ?></strong><span>Quantidade: <?= (int) $item['quantidade'] ?></span></div><b>R$ <?= number_format((float) $item['subtotal'], 2, ',', '.') ?></b></div>
-                                <?php endforeach; ?>
-                            </div>
-                            <div class="pedido-conta-total"><span>Total do pedido</span><strong>R$ <?= number_format((float) $pedido['total_pedido'], 2, ',', '.') ?></strong></div>
+                            <dl class="lista-dados-conta">
+                                <div>
+                                    <dt>Nome completo</dt>
+                                    <dd><?= htmlspecialchars($pessoa['nome']) ?></dd>
+                                </div>
+                                <div>
+                                    <dt>CPF</dt>
+                                    <dd><?= htmlspecialchars($pessoa['cpf']) ?></dd>
+                                </div>
+                                <div>
+                                    <dt>Nascimento</dt>
+                                    <dd><?= htmlspecialchars($pessoa['dt_nasc']) ?></dd>
+                                </div>
+                                <div>
+                                    <dt>E-mail</dt>
+                                    <dd><?= htmlspecialchars($pessoa['email']) ?></dd>
+                                </div>
+                                <div>
+                                    <dt>Telefone</dt>
+                                    <dd><?= htmlspecialchars($pessoa['telefone']) ?></dd>
+                                </div>
+                            </dl>
+                            <a href="../banco/edit-pessoa.php?id=<?= (int) $_SESSION['user_id'] ?>" class="btn-secundario-conta"><i class="fa-solid fa-pen"></i> Editar dados</a>
                         </article>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-        </section>
-    </div>
-<?php endif; ?>
-</main>
 
-
-
-            <!-- AÇÕES DA CONTA -->
-            <!--<section class="acoes-usuario">
-
-                            <h2>Ações da conta</h2>
-
-                            <div class="botoes-acoes">
-
-                                <a href="#" class="btn-acao">
-                                    Editar informações
-                                </a>
-
-                                <a href="#" class="btn-acao">
-                                    Editar endereço
-                                </a>
-
+                        <article class="painel-info-conta">
+                            <div class="titulo-painel-info">
+                                <span class="icone-painel-info"><i class="fa-solid fa-location-dot"></i></span>
+                                <div>
+                                    <h2>Endereço de entrega</h2>
+                                    <p>Local para receber suas compras</p>
+                                </div>
                             </div>
+                            <dl class="lista-dados-conta">
+                                <div>
+                                    <dt>Rua</dt>
+                                    <dd><?= htmlspecialchars($endereco['nome_rua']) ?>, <?= htmlspecialchars($endereco['numero_casa']) ?></dd>
+                                </div>
+                                <div>
+                                    <dt>Bairro</dt>
+                                    <dd><?= htmlspecialchars($endereco['nome_bairro']) ?></dd>
+                                </div>
+                                <div>
+                                    <dt>Cidade / Estado</dt>
+                                    <dd><?= htmlspecialchars($endereco['cidade']) ?> - <?= htmlspecialchars($endereco['estado']) ?></dd>
+                                </div>
+                                <div>
+                                    <dt>CEP</dt>
+                                    <dd><?= htmlspecialchars($endereco['cep']) ?></dd>
+                                </div>
+                                <?php if (!empty($endereco['apartamento'])): ?><div>
+                                        <dt>Complemento</dt>
+                                        <dd><?= htmlspecialchars($endereco['apartamento']) ?></dd>
+                                    </div><?php endif; ?>
+                                <?php if (!empty($endereco['referencia'])): ?><div>
+                                        <dt>Referência</dt>
+                                        <dd><?= htmlspecialchars($endereco['referencia']) ?></dd>
+                                    </div><?php endif; ?>
+                            </dl>
+                            <a href="../banco/edit-endereco.php?id=<?= (int) $_SESSION['user_id'] ?>" class="btn-secundario-conta"><i class="fa-solid fa-pen"></i> Editar endereço</a>
+                        </article>
+                    </section>
+                <?php endif; ?>
 
-                        </section> -->
+                <section class="area-pedidos-conta">
+                    <div class="cabecalho-pedidos-conta">
+                        <div><span class="sobretitulo-conta">HISTÓRICO</span>
+                            <h2>Meus pedidos</h2>
+                            <p>Consulte suas compras e os valores de cada pedido.</p>
+                        </div>
+                        <a href="../produtos/produtos.php" class="link-continuar-comprando">Continuar comprando <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
 
+                    <?php if (empty($pedidos)): ?>
+                        <div class="sem-pedidos-conta"><i class="fa-solid fa-box-open"></i>
+                            <h3>Você ainda não fez pedidos</h3>
+                            <p>Quando você realizar uma compra, ela aparecerá aqui.</p><a href="../produtos/produtos.php" class="btn-primario-conta">Explorar produtos</a>
+                        </div>
+                    <?php else: ?>
+
+                        <div class="grade-pedidos-conta">
+                            <?php foreach ($pedidos as $pedido): ?>
+                                <?php
+                                $sqlItens = $pdo->prepare("SELECT pr.nome_produto, ip.quantidade, ip.preco_unitario, ip.subtotal FROM itens_pedido ip INNER JOIN produtos pr ON pr.pk_id_produtos = ip.fk_id_produtos WHERE ip.fk_id_pedidos = ?");
+                                $sqlItens->execute([$pedido['pk_id_pedidos']]);
+                                $itens = $sqlItens->fetchAll(PDO::FETCH_ASSOC);
+                                ?>
+                                <article class="pedido-conta-card">
+                                    <div class="pedido-conta-topo">
+                                        <div><span class="pedido-label">PEDIDO</span>
+                                            <h3>#<?= (int) $pedido['pk_id_pedidos'] ?></h3>
+                                            <p><i class="fa-regular fa-calendar"></i> <?= date('d/m/Y H:i', strtotime($pedido['dt_pedido'])) ?></p>
+                                        </div>
+                                        <span class="status-pedido-conta"><?= htmlspecialchars($pedido['status_pedido']) ?></span>
+                                    </div>
+                                    <div class="pedido-conta-itens">
+                                        <?php foreach ($itens as $item): ?>
+                                            <div class="linha-item-conta">
+                                                <div><strong><?= htmlspecialchars($item['nome_produto']) ?></strong><span>Quantidade: <?= (int) $item['quantidade'] ?></span></div><b>R$ <?= number_format((float) $item['subtotal'], 2, ',', '.') ?></b>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    <div class="pedido-conta-total"><span>Total do pedido</span><strong>R$ <?= number_format((float) $pedido['total_pedido'], 2, ',', '.') ?></strong></div>
+                                </article>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                </section>
+            </div>
+        <?php endif; ?>
     </main>
 
     <!-- PARTE FINAL DO SITE / FOOTER -->
