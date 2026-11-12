@@ -1,4 +1,3 @@
-//Banco de dados atualizado
 CREATE TABLE `artesanatos-eloi`.`admin` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
@@ -163,10 +162,10 @@ CREATE TABLE `artesanatos-eloi`.`produtos` (
   `foto_produto` longblob NOT NULL,
   `descricao_imagem` varchar(200) DEFAULT NULL,
   `estoque` int(5) NOT NULL,
-  `desconto` decimal(4,2) DEFAULT NULL,
+  `desconto` decimal(10,2) DEFAULT 0.00 ,
   `status_produto` tinyint(1) NOT NULL,
   PRIMARY KEY (`pk_id_produtos`)
-);
+)
 
 CREATE TABLE `artesanatos-eloi`.`itens_pedido` (
   `pk_id_itens_pedido` int(11) NOT NULL AUTO_INCREMENT,

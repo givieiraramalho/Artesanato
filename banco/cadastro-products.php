@@ -7,7 +7,8 @@ session_start();
 // Recebendo os dados do formulário
 $nome = filter_input(INPUT_POST, 'nome');
 $preco = filter_input(INPUT_POST, 'preco');
-$desconto = filter_input(INPUT_POST, 'desconto');
+// Se o campo de desconto estiver vazio, define como 0.00, senão pega o valor digitado
+$desconto = !empty($_POST['desconto']) ? filter_input(INPUT_POST, 'desconto', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 0.00;
 $status = filter_input(INPUT_POST, 'status');
 $estoque = filter_input(INPUT_POST, 'estoque');
 $descricao = filter_input(INPUT_POST, 'descricao');
