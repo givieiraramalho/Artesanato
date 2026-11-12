@@ -1,85 +1,85 @@
 <?php
-
-//Responsável por resgatar o código principal de conexão com o banco de dados
+// Realiza a conexão com o banco de dados
 require '../banco/config.php';
-
 session_start();
 
-$categoria = filter_input(INPUT_GET, 'categoria', FILTER_VALIDATE_INT);
-
-$listaProdutos = [];
-
-if ($categoria && $categoria > 1) {
-
-    $sql = $pdo->prepare("
-        SELECT p.*
-        FROM produtos p
-        INNER JOIN produto_categoria pc
-            ON p.pk_id_produtos = pc.id_produto
-        WHERE p.status_produto = 1
-        AND pc.id_categoria = ?
-    ");
-
-    $sql->execute([$categoria]);
-} else {
-
-    $sql = $pdo->query("
-        SELECT *
-        FROM produtos
-        WHERE status_produto = 1
-    ");
-}
-
-if ($sql->rowCount() > 0) {
-    $listaProdutos = $sql->fetchAll(PDO::FETCH_ASSOC);
-}
-
-$categoriaSelecionada = $_GET['categoria'] ?? null;
-
+// Mapeamento das categorias (Ajustado ID 5 para Promoções conforme sua lista)
 $categorias = [
     1 => 'Todos',
     2 => 'Recomendados',
-    3 => 'Destaques',
-    4 => 'Promoções',
-    5 => 'Mais Vendidos'
+    3 => 'Mais Vendidos',
+    4 => 'Destaques',
+    5 => 'Promoções'
 ];
 
-$nomeCategoria = $categoriaSelecionada !== null && isset($categorias[$categoriaSelecionada])
-    ? $categorias[$categoriaSelecionada]
-    : null;
+// Pega a categoria da URL (padrão é 1 se vier vazia ou inválida)
+$categoriaSelecionada = filter_input(INPUT_GET, 'categoria', FILTER_VALIDATE_INT);
+if (!$categoriaSelecionada || !isset($categorias[$categoriaSelecionada])) {
+    $categoriaSelecionada = 1;
+}
 
-$temFiltro = $categoriaSelecionada !== null && $categoriaSelecionada != 1;
+$listaProdutos = [];
 
+// 1. CONSULTA SQL (Com tratamento de Pesquisa e Categorias)
 
-// Verifica se foi digitado algo na pesquisa
 if (!empty($_POST['search'])) {
-
-    // Prepara o termo de pesquisa
+    // Se o usuário fez uma pesquisa
     $data = "%" . trim($_POST['search']) . "%";
 
-    // Pesquisa pelo ID, nome ou descrição do produto
     $sql = $pdo->prepare("
-        SELECT *
-        FROM produtos
-        WHERE pk_id_produtos LIKE ?
-        OR nome_produto LIKE ?
-        OR descricao LIKE ?
-        ORDER BY pk_id_produtos ASC
+        SELECT DISTINCT p.*
+        FROM produtos p
+        WHERE (p.pk_id_produtos LIKE ? OR p.nome_produto LIKE ? OR p.descricao LIKE ?)
+        AND p.status_produto = 1
+        ORDER BY p.pk_id_produtos ASC
     ");
-
     $sql->execute([$data, $data, $data]);
 } else {
 
-    // Se não houver pesquisa, lista todos os produtos
-    $sql = $pdo->query("
-        SELECT *
-        FROM produtos
-        ORDER BY pk_id_produtos ASC
-    ");
+    // Se estiver filtrando por categoria
+    if ($categoriaSelecionada == 5) {
+
+        // Categoria 5: Promoções (Traz apenas produtos ativos E com desconto > 0)
+        $sql = $pdo->prepare("
+            SELECT DISTINCT p.*
+            FROM produtos p
+            INNER JOIN produto_categoria pc ON p.pk_id_produtos = pc.id_produto
+            WHERE p.status_produto = 1 
+            AND pc.id_categoria = ?
+            AND p.desconto > 0
+        ");
+        $sql->execute([$categoriaSelecionada]);
+    } elseif ($categoriaSelecionada > 1) {
+
+        // Outras categorias específicas
+        $sql = $pdo->prepare("
+            SELECT DISTINCT p.*
+            FROM produtos p
+            INNER JOIN produto_categoria pc ON p.pk_id_produtos = pc.id_produto
+            WHERE p.status_produto = 1 
+            AND pc.id_categoria = ?
+        ");
+        $sql->execute([$categoriaSelecionada]);
+    } else {
+
+        // Categoria 1: Todos (Traz todos os produtos ativos)
+        $sql = $pdo->query("
+            SELECT *
+            FROM produtos
+            WHERE status_produto = 1
+            ORDER BY pk_id_produtos ASC
+        ");
+    }
 }
 
-// Recupera os produtos encontrados
+//Verifica todos os dados do array da listaProdutos
 $listaProdutos = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+//Verifica a categoria selecionada
+$nomeCategoria = $categorias[$categoriaSelecionada];
+
+//Verifica se existe filtro
+$temFiltro = ($categoriaSelecionada != 1);
 ?>
 
 
@@ -174,17 +174,19 @@ $listaProdutos = $sql->fetchAll(PDO::FETCH_ASSOC);
                 Produtos
             </a>
 
+            <!-- Categorias -->
             <div class="dropdown">
                 <a href="#" class="link-animado" id="categorias-mobile">
                     Categorias
                 </a>
 
+                <!-- Filtro - Categorias dos Produtos -->
                 <div class="dropdown-menu">
                     <a href="../produtos/produtos.php?categoria=1">Todos</a>
                     <a href="../produtos/produtos.php?categoria=2">Recomendados</a>
-                    <a href="../produtos/produtos.php?categoria=3">Destaques</a>
-                    <a href="../produtos/produtos.php?categoria=4">Promoções</a>
-                    <a href="../produtos/produtos.php?categoria=5">Mais Vendidos</a>
+                    <a href="../produtos/produtos.php?categoria=3">Mais Vendidos</a>
+                    <a href="../produtos/produtos.php?categoria=4">Destaques</a>
+                    <a href="../produtos/produtos.php?categoria=5">Promoções</a>
                 </div>
             </div>
 
@@ -195,73 +197,61 @@ $listaProdutos = $sql->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 
-    <!-- SLIDES DE APRESENTAÇÃO DA EMPRESA/PRODUTOS -->
-    <?php if (!$temFiltro): ?>
-
-        <section class="banner">
-            <div class="banner-content">
-                <h1>Brinquedos Artesanais em MDF</h1>
-
-                <p>
-                    Criados com amor e dedicação para trazer alegria e diversão para
-                    as crianças. Produtos sustentáveis, seguros e de alta qualidade.
-                </p>
-            </div>
-        </section>
-
-    <?php endif; ?>
-
     <!-- PARTE DE FILTROS DE PRODUTOS -->
     <section class="area-filtros">
 
+        <!-- Trilha de Navegação (Breadcrumb) -->
+        <nav class="breadcrumb" aria-label="Você está em:">
+            <a href="index.php">Início</a>
+            <span class="separador">›</span>
+            <a href="produtos.php">Catálogo</a>
+            <?php if ($temFiltro && $categoriaSelecionada != 1): ?>
+                <span class="separador">›</span>
+                <span class="atual"><?= htmlspecialchars($nomeCategoria); ?></span>
+            <?php endif; ?>
+        </nav>
+
+        <!-- Cabeçalho Principal -->
         <div class="cabecalho-filtros">
-            <span class="linha-decorativa"></span>
-
-            <div>
-                <h2>Encontre o que procura</h2>
-                <p>Explore nossa coleção de produtos artesanais</p>
-            </div>
-
-            <span class="linha-decorativa"></span>
+            <h2>Produtos - Artesanatos Eloi</h2>
+            <p>Peças exclusivas criadas à mão para transformar o seu ambiente</p>
         </div>
 
-        <div class="filtros">
+        <!-- Navegação por Abas / Filtros -->
+        <div class="filtros" role="tablist">
 
-            <a href="produtos.php?categoria=1"
-                class="filtro <?= ($categoriaSelecionada == 1 || $categoriaSelecionada === null) ? 'ativo' : ''; ?>">
-                Todos
+            <!-- Filtro - Todos os Produtos -->
+            <a href="produtos.php?categoria=1" role="tab" class="filtro <?= ($categoriaSelecionada == 1 || $categoriaSelecionada === null) ? 'ativo' : ''; ?>">
+                <span>Todos os Produtos</span>
             </a>
 
-            <a href="produtos.php?categoria=2"
-                class="filtro <?= ($categoriaSelecionada == 2) ? 'ativo' : ''; ?>">
-                Recomendados
+            <!-- Filtro - Recomendados -->
+            <a href="produtos.php?categoria=2" role="tab" class="filtro <?= ($categoriaSelecionada == 2) ? 'ativo' : ''; ?>">
+                <span>Recomendados</span>
             </a>
 
-            <a href="produtos.php?categoria=3"
-                class="filtro <?= ($categoriaSelecionada == 3) ? 'ativo' : ''; ?>">
-                Destaques
+            <!-- Filtro - Mais Vendidos -->
+            <a href="produtos.php?categoria=3" role="tab" class="filtro <?= ($categoriaSelecionada == 3) ? 'ativo' : ''; ?>">
+                <span>Mais Vendidos</span>
             </a>
 
-            <a href="produtos.php?categoria=4"
-                class="filtro <?= ($categoriaSelecionada == 4) ? 'ativo' : ''; ?>">
-                Promoções
+            <!-- Filtro - Destaques -->
+            <a href="produtos.php?categoria=4" role="tab" class="filtro <?= ($categoriaSelecionada == 4) ? 'ativo' : ''; ?>">
+                <span>Destaques</span>
             </a>
 
-            <a href="produtos.php?categoria=5"
-                class="filtro <?= ($categoriaSelecionada == 5) ? 'ativo' : ''; ?>">
-                Mais Vendidos
+            <!-- Filtro - Promoções -->
+            <a href="produtos.php?categoria=5" role="tab" class="filtro filtro-promocao <?= ($categoriaSelecionada == 5) ? 'ativo' : ''; ?>">
+                <span class="badge-tag">Oferta</span>
+                <span>Promoções</span>
             </a>
-
         </div>
 
-        <?php if ($temFiltro): ?>
-
+        <!-- Título da Seção Ativa (Exibido apenas quando filtrado) -->
+        <?php if ($temFiltro && $categoriaSelecionada != 1): ?>
             <div class="titulo-categoria">
-                <span></span>
-                <h1>Produtos - <?= htmlspecialchars($nomeCategoria); ?></h1>
-                <span></span>
+                <h1><?= htmlspecialchars($nomeCategoria); ?></h1>
             </div>
-
         <?php endif; ?>
 
     </section>
@@ -270,41 +260,84 @@ $listaProdutos = $sql->fetchAll(PDO::FETCH_ASSOC);
     <!-- PARTE DOS CARDS DOS PRODUTOS -->
     <div class="card-container">
 
-        <?php foreach ($listaProdutos as $produtos): ?>
-
-            <div class="product-card">
-
-                <div class="product-image-container">
-                    <img
-                        src="mostrar-imagem.php?id=<?= $produtos['pk_id_produtos']; ?>"
-                        alt="<?= $produtos['descricao_imagem']; ?>"
-                        class="product-image">
-                </div>
-
-                <div class="product-info">
-
-                    <h2 class="product-title">
-                        <?= $produtos['nome_produto'] ?>
-                    </h2>
-
-                    <p class="product-description">
-                        <?= $produtos['descricao'] ?>
-                    </p>
-
-                    <div class="product-price">
-                        R$ <?= $produtos['preco_produto'] ?>
-                    </div>
-
-                    <div class="action-button">
-                        <a class="btn-product" href="../ver-produtos/pagina-produto.php?id=<?= $produtos['pk_id_produtos'] ?>">Ver Produto</a>
-
-                        <a class="btn-comprar" href="../carrinho-compras/carrinho-compras.php?adicionar=<?php echo $produtos['pk_id_produtos']; ?>">Comprar Agora</a>
-                    </div>
-                </div>
-
+        <?php if (empty($listaProdutos)): ?>
+            <div class="sem-produtos">
+                <p>Nenhum produto encontrado nesta categoria</p>
             </div>
+        <?php else: ?>
 
-        <?php endforeach; ?>
+            <?php foreach ($listaProdutos as $produtos): ?>
+
+                <?php
+
+                // CÁLCULO INDIVIDUAL DE DESCONTO POR PRODUTO
+                $precoOriginal = $produtos['preco_produto'];
+                $porcentagemDesconto = $produtos['desconto']; // Ex: 20.00
+
+                if ($porcentagemDesconto > 0) {
+                    $valorDesconto = $precoOriginal * ($porcentagemDesconto / 100);
+                    $precoFinal = $precoOriginal - $valorDesconto;
+                    $temPromocao = true;
+                } else {
+                    $precoFinal = $precoOriginal;
+                    $temPromocao = false;
+                }
+                ?>
+
+                <!-- CARDS DOS PRODUTOS -->
+                <div class="product-card">
+
+                    <div class="product-image-container">
+                        <!-- Tag de desconto flutuante no topo da foto -->
+                        <?php if ($temPromocao): ?>
+                            <span class="badge-desconto-topo">
+                                <?= number_format($porcentagemDesconto, 0) ?>% OFF
+                            </span>
+                        <?php endif; ?>
+
+                        <img
+                            src="mostrar-imagem.php?id=<?= $produtos['pk_id_produtos']; ?>"
+                            alt="<?= htmlspecialchars($produtos['descricao_imagem'] ?? ''); ?>"
+                            class="product-image">
+                    </div>
+
+                    <div class="product-info">
+
+                        <h2 class="product-title">
+                            <?= htmlspecialchars($produtos['nome_produto']) ?>
+                        </h2>
+
+                        <p class="product-description">
+                            <?= htmlspecialchars($produtos['descricao']) ?>
+                        </p>
+
+                        <!-- Preços Lado a Lado -->
+                        <div class="product-price-container">
+                            <?php if ($temPromocao): ?>
+                                <span class="preco-antigo">
+                                    R$ <?= number_format($precoOriginal, 2, ',', '.') ?>
+                                </span>
+                                <span class="preco-atual">
+                                    R$ <?= number_format($precoFinal, 2, ',', '.') ?>
+                                </span>
+                            <?php else: ?>
+                                <span class="preco-atual">
+                                    R$ <?= number_format($precoOriginal, 2, ',', '.') ?>
+                                </span>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="action-button">
+                            <a class="btn-product" href="../ver-produtos/pagina-produto.php?id=<?= $produtos['pk_id_produtos'] ?>">Ver Produto</a>
+                            <a class="btn-comprar" href="../carrinho-compras/carrinho-compras.php?adicionar=<?php echo $produtos['pk_id_produtos']; ?>">Comprar</a>
+                        </div>
+                    </div>
+
+                </div>
+
+            <?php endforeach; ?>
+
+        <?php endif; ?>
     </div>
 
     <!-- PARTE FINAL DO SITE / FOOTER -->
