@@ -86,17 +86,19 @@ if (isset($_SESSION['sucesso_cadastro'])) {
                 Produtos
             </a>
 
+            <!-- Categorias -->
             <div class="dropdown">
                 <a href="#" class="link-animado" id="categorias-mobile">
                     Categorias
                 </a>
 
+                <!-- Filtro - Categorias dos Produtos -->
                 <div class="dropdown-menu">
                     <a href="../produtos/produtos.php?categoria=1">Todos</a>
                     <a href="../produtos/produtos.php?categoria=2">Recomendados</a>
-                    <a href="../produtos/produtos.php?categoria=3">Destaques</a>
-                    <a href="../produtos/produtos.php?categoria=4">Promoções</a>
-                    <a href="../produtos/produtos.php?categoria=5">Mais Vendidos</a>
+                    <a href="../produtos/produtos.php?categoria=3">Mais Vendidos</a>
+                    <a href="../produtos/produtos.php?categoria=4">Destaques</a>
+                    <a href="../produtos/produtos.php?categoria=5">Promoções</a>
                 </div>
             </div>
 
