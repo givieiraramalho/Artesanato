@@ -15,8 +15,7 @@ if (!$id) {
 $sql = $pdo->prepare("
     SELECT *
     FROM produtos
-    WHERE pk_id_produtos = :id
-");
+    WHERE pk_id_produtos = :id");
 
 $sql->bindValue(':id', $id);
 $sql->execute();
@@ -27,6 +26,20 @@ if (!$produto) {
     die("Produto não encontrado.");
 }
 
+// Cálculo do desconto do produto
+$precoOriginal = (float) $produto['preco_produto'];
+$porcentagemDesconto = (float) ($produto['desconto'] ?? 0);
+
+if ($porcentagemDesconto > 0) {
+    $valorDesconto = $precoOriginal * ($porcentagemDesconto / 100);
+    $precoFinal = $precoOriginal - $valorDesconto;
+    $temPromocao = true;
+} else {
+    $precoFinal = $precoOriginal;
+    $temPromocao = false;
+}
+
+//Realizando o filtro da categoria
 $categoria = filter_input(INPUT_GET, 'categoria', FILTER_VALIDATE_INT);
 
 $listaProdutos = [];
@@ -140,17 +153,19 @@ if ($sql->rowCount() > 0) {
                 Produtos
             </a>
 
+           <!-- Categorias -->
             <div class="dropdown">
                 <a href="#" class="link-animado" id="categorias-mobile">
                     Categorias
                 </a>
 
+                <!-- Filtro - Categorias dos Produtos -->
                 <div class="dropdown-menu">
                     <a href="../produtos/produtos.php?categoria=1">Todos</a>
                     <a href="../produtos/produtos.php?categoria=2">Recomendados</a>
-                    <a href="../produtos/produtos.php?categoria=3">Destaques</a>
-                    <a href="../produtos/produtos.php?categoria=4">Promoções</a>
-                    <a href="../produtos/produtos.php?categoria=5">Mais Vendidos</a>
+                    <a href="../produtos/produtos.php?categoria=3">Mais Vendidos</a>
+                    <a href="../produtos/produtos.php?categoria=4">Destaques</a>
+                    <a href="../produtos/produtos.php?categoria=5">Promoções</a>
                 </div>
             </div>
 
@@ -177,7 +192,6 @@ if ($sql->rowCount() > 0) {
             <div class="produto-detalhes">
 
                 <!-- LADO ESQUERDO -->
-
                 <div class="produto-esquerda">
 
                     <!-- NOME DO PRODUTO -->
@@ -213,19 +227,23 @@ if ($sql->rowCount() > 0) {
 
                     <!-- PREÇO -->
                     <div class="preco-container">
-                        <span class="preco-label">
-                            Preço
-                        </span>
+                        <span class="preco-label">Preço</span>
 
-                        <h2 class="preco-produto">
-                            R$
-                            <?= number_format(
-                                $produto['preco_produto'],
-                                2,
-                                ',',
-                                '.'
-                            ) ?>
-                        </h2>
+                        <?php if ($temPromocao): ?>
+                            <p style="text-decoration: line-through; color: #888; margin-bottom: 2px; font-size: 1rem;">
+                                R$ <?= number_format($precoOriginal, 2, ',', '.') ?>
+                            </p>
+                            <h2 class="preco-produto" style="color: #d9534f;">
+                                R$ <?= number_format($precoFinal, 2, ',', '.') ?>
+                                <span style="background: #ff4757; color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 0.55em; vertical-align: middle;">
+                                    <?= number_format($porcentagemDesconto, 0) ?>% OFF
+                                </span>
+                            </h2>
+                        <?php else: ?>
+                            <h2 class="preco-produto">
+                                R$ <?= number_format($precoOriginal, 2, ',', '.') ?>
+                            </h2>
+                        <?php endif; ?>
                     </div>
 
 
@@ -375,12 +393,11 @@ if ($sql->rowCount() > 0) {
 
         });
 
-
         // Estado inicial
         atualizarQuantidade();
     </script>
 
-     <!-- PARTE FINAL DO SITE / FOOTER -->
+    <!-- PARTE FINAL DO SITE / FOOTER -->
     <footer>
         <div class="content-footer">
             <div class="top">
